@@ -1,0 +1,13 @@
+digraph DFD {
+	rankdir=LR
+	User [label=User]
+	Frontend [label="Frontend Interface"]
+	Backend [label="Backend (Flask)"]
+	Database [label="Database (PostgreSQL)"]
+	User -> Frontend [label="Inputs Data"]
+	Frontend -> Backend [label="Sends Requests"]
+	Backend -> Database [label="Fetch/Update Data"]
+	Database -> Backend [label="Returns Data"]
+	Backend -> Frontend [label="Responds with Data"]
+	Frontend -> User [label="Displays Outputs"]
+}

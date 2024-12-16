@@ -1,0 +1,68 @@
+{% extends "auth/admin_dashboard.html" %}
+{% block title %}Edit Department{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title mb-0">Edit Department</h3>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <form method="POST" action="{{ url_for('department.edit_department', id=department.id) }}">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Department Name *</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ department.name }}" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3">{{ department.description }}</textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="head_doctor_id" class="form-label">Head Doctor</label>
+                            <select class="form-select" id="head_doctor_id" name="head_doctor_id">
+                                <option value="">Select Head Doctor</option>
+                                {% for doctor in doctors %}
+                                    <option value="{{ doctor.id }}" {% if department.head_doctor_id == doctor.id %}selected{% endif %}>
+                                        {{ doctor.name }} - {{ doctor.specialisation }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('department.list_departments') }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Update Department</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const name = document.getElementById('name').value.trim();
+        if (!name) {
+            e.preventDefault();
+            alert('Department name is required!');
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

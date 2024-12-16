@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard</title>
+    <style>
+        /* Basic reset */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+        }
+        /* Container for the page */
+        .dashboard-container {
+            display: flex;
+            justify-content: space-between;
+            height: 100vh;
+        }
+        /* Sidebar styles */
+        .sidebar {
+            background-color: #3f5b76;
+            color: #fff;
+            width: 250px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .sidebar a:hover {
+            background-color: #1f3a4c;
+        }
+        /* Main content styles */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #ffffff;
+            overflow-y: auto;
+        }
+        .main-content h1 {
+            color: #333;
+        }
+        .card {
+            background-color: #fff;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-title {
+            font-size: 1.5rem;
+            color: #3f5b76;
+            margin-bottom: 10px;
+        }
+        .card button {
+            background-color: #3f5b76;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .card button:hover {
+            background-color: #1f3a4c;
+        }
+        /* Dropdown style */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {background-color: #f1f1f1}
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Doctor Dashboard</h2>
+        <a href="#" class="dropdown">
+            View Patients
+            <div class="dropdown-content">
+                <a href="#">Patient List</a>
+                <a href="#">Add New Patient</a>
+            </div>
+        </a>
+        <a href="{{url_for('doctor_bp.view_appointments')}}">View Appointments</a>
+        <a href="#">View Medical History</a>
+        <a href="#">Prescriptions</a>
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Welcome, Dr. {{doctor_name}}!</h1>
+
+        <!-- View Patients Card -->
+        <div class="card">
+            <div class="card-title">View Patients</div>
+            <button id="view-patients-btn" onclick="showPatientsModal()">View Patient List</button>
+        </div>
+
+        <!-- View Appointments Card -->
+        <div class="card">
+            <div class="card-title">View Appointments</div>
+            <button id="view-appointments-btn" onclick="window.location.href='/doctor/view_appointments'"">View Today's Appointments</button>
+        </div>
+
+        <!-- View Medical History Card -->
+        <div class="card">
+            <div class="card-title">View Medical History</div>
+            <button id="view-history-btn" onclick="showHistoryModal()">View Patient's Medical History</button>
+        </div>
+
+        <!-- Modal for Patient List -->
+        <div id="patientsModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('patientsModal')">&times;</span>
+                <h2>Patient List</h2>
+                <p>Here you can view all registered patients.</p>
+                <!-- Display patient details here -->
+            </div>
+        </div>
+
+        <!-- Modal for Appointments -->
+        <div id="appointmentsModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('appointmentsModal')">&times;</span>
+                <h2>Today's Appointments</h2>
+                <p>Here you can view today's appointments.</p>
+                <!-- Display appointment details here -->
+            </div>
+        </div>
+
+        <!-- Modal for Medical History -->
+        <div id="historyModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal('historyModal')">&times;</span>
+                <h2>Medical History</h2>
+                <p>Here you can view the medical history of a patient.</p>
+                <!-- Display medical history here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Modal and Dropdowns -->
+<script>
+    // Show Modal
+    function showPatientsModal() {
+        document.getElementById('patientsModal').style.display = "block";
+    }
+    function showAppointmentsModal() {
+        document.getElementById('appointmentsModal').style.display = "block";
+    }
+    function showHistoryModal() {
+        document.getElementById('historyModal').style.display = "block";
+    }
+
+    // Close Modal
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+    }
+</script>
+
+</body>
+</html>

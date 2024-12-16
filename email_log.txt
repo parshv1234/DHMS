@@ -1,0 +1,156 @@
+2024-11-18 17:41:08,507 - INFO - Email successfully sent to parshv.modi91@gmail.com
+2024-11-18 17:41:08,508 - INFO - 127.0.0.1 - - [18/Nov/2024 17:41:08] "[32mPOST /register_patient HTTP/1.1[0m" 302 -
+2024-11-18 17:41:08,514 - INFO - 127.0.0.1 - - [18/Nov/2024 17:41:08] "GET /register_patient HTTP/1.1" 200 -
+2024-11-18 17:41:08,536 - INFO - 127.0.0.1 - - [18/Nov/2024 17:41:08] "[36mGET /static/css/styles.css HTTP/1.1[0m" 304 -
+2024-11-18 17:41:08,537 - INFO - 127.0.0.1 - - [18/Nov/2024 17:41:08] "[36mGET /static/js/validate.js HTTP/1.1[0m" 304 -
+2024-11-24 00:24:56,907 - DEBUG - STREAM b'IHDR' 16 13
+2024-11-24 00:24:56,907 - DEBUG - STREAM b'IDAT' 41 8192
+2024-11-24 00:24:59,602 - DEBUG - STREAM b'IHDR' 16 13
+2024-11-24 00:24:59,602 - DEBUG - STREAM b'IDAT' 41 8192
+2024-11-24 00:25:05,752 - INFO - Email successfully sent to aamir.khaaan@gmail.com
+2024-11-24 00:25:05,753 - INFO - 127.0.0.1 - - [24/Nov/2024 00:25:05] "[32mPOST /patient/register_patient HTTP/1.1[0m" 302 -
+2024-11-24 00:25:05,756 - INFO - 127.0.0.1 - - [24/Nov/2024 00:25:05] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 00:25:11,427 - INFO - Email successfully sent to aamir.khaaan@gmail.com
+2024-11-24 00:25:11,427 - INFO - 127.0.0.1 - - [24/Nov/2024 00:25:11] "[32mPOST /patient/register_patient HTTP/1.1[0m" 302 -
+2024-11-24 00:25:11,429 - INFO - 127.0.0.1 - - [24/Nov/2024 00:25:11] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 00:25:13,059 - INFO - Email successfully sent to aamir.khaaan@gmail.com
+2024-11-24 00:25:13,059 - INFO - 127.0.0.1 - - [24/Nov/2024 00:25:13] "[32mPOST /patient/register_patient HTTP/1.1[0m" 302 -
+2024-11-24 00:25:13,061 - INFO - 127.0.0.1 - - [24/Nov/2024 00:25:13] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 00:26:15,512 - INFO - 127.0.0.1 - - [24/Nov/2024 00:26:15] "GET /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 00:26:16,601 - INFO - 127.0.0.1 - - [24/Nov/2024 00:26:16] "GET /signup HTTP/1.1" 200 -
+2024-11-24 00:26:42,152 - INFO - 127.0.0.1 - - [24/Nov/2024 00:26:42] "POST /signup HTTP/1.1" 200 -
+2024-11-24 00:26:43,363 - INFO - 127.0.0.1 - - [24/Nov/2024 00:26:43] "GET /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 00:26:46,280 - INFO - 127.0.0.1 - - [24/Nov/2024 00:26:46] "POST /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 00:26:52,565 - INFO - 127.0.0.1 - - [24/Nov/2024 00:26:52] "GET /patient/register_patient HTTP/1.1" 200 -
+2024-11-24 00:27:17,147 - DEBUG - STREAM b'IHDR' 16 13
+2024-11-24 00:27:17,147 - DEBUG - STREAM b'IDAT' 41 8192
+2024-11-24 00:27:30,480 - INFO - Email successfully sent to aamir.khaaan@gmail.com
+2024-11-24 00:27:30,481 - INFO - 127.0.0.1 - - [24/Nov/2024 00:27:30] "[32mPOST /patient/register_patient HTTP/1.1[0m" 302 -
+2024-11-24 00:27:30,484 - INFO - 127.0.0.1 - - [24/Nov/2024 00:27:30] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 00:30:27,740 - INFO - Email successfully sent to aamir.khaaan@gmail.com
+2024-11-24 00:30:27,741 - INFO - 127.0.0.1 - - [24/Nov/2024 00:30:27] "[32mPOST /patient/register_patient HTTP/1.1[0m" 302 -
+2024-11-24 00:30:27,743 - INFO - 127.0.0.1 - - [24/Nov/2024 00:30:27] "GET /patient/register_patient HTTP/1.1" 200 -
+2024-11-24 00:31:49,861 - INFO - Email successfully sent to aamir.khaaan@gmail.com
+2024-11-24 00:31:49,862 - INFO - 127.0.0.1 - - [24/Nov/2024 00:31:49] "[32mPOST /patient/register_patient HTTP/1.1[0m" 302 -
+2024-11-24 00:31:49,866 - INFO - 127.0.0.1 - - [24/Nov/2024 00:31:49] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 00:36:26,442 - INFO - Email successfully sent to aamir.khaaan@gmail.com
+2024-11-24 00:36:26,443 - INFO - 127.0.0.1 - - [24/Nov/2024 00:36:26] "[32mPOST /patient/register_patient HTTP/1.1[0m" 302 -
+2024-11-24 00:36:26,447 - INFO - 127.0.0.1 - - [24/Nov/2024 00:36:26] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 10:06:29,786 - INFO - Email successfully sent to parshv.modi91@gmail.com
+2024-11-24 10:06:29,788 - INFO - 127.0.0.1 - - [24/Nov/2024 10:06:29] "[32mPOST /patient/register_patient HTTP/1.1[0m" 302 -
+2024-11-24 10:06:29,790 - INFO - 127.0.0.1 - - [24/Nov/2024 10:06:29] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 10:37:07,366 - INFO - Email successfully sent to parshv.modi91@gmail.com
+2024-11-24 10:37:07,367 - INFO - 127.0.0.1 - - [24/Nov/2024 10:37:07] "POST /patient/register_patient HTTP/1.1" 200 -
+2024-11-24 10:37:15,615 - INFO - 127.0.0.1 - - [24/Nov/2024 10:37:15] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 10:37:22,730 - INFO - 127.0.0.1 - - [24/Nov/2024 10:37:22] "[31m[1mGET /logout HTTP/1.1[0m" 401 -
+2024-11-24 10:37:28,593 - INFO - 127.0.0.1 - - [24/Nov/2024 10:37:28] "GET /login HTTP/1.1" 200 -
+2024-11-24 10:37:46,481 - INFO - 127.0.0.1 - - [24/Nov/2024 10:37:46] "POST /login HTTP/1.1" 200 -
+2024-11-24 10:37:47,343 - INFO - 127.0.0.1 - - [24/Nov/2024 10:37:47] "GET /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 10:37:49,190 - INFO - 127.0.0.1 - - [24/Nov/2024 10:37:49] "POST /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 10:37:51,824 - INFO - 127.0.0.1 - - [24/Nov/2024 10:37:51] "GET /patient/register_patient HTTP/1.1" 200 -
+2024-11-24 11:04:15,169 - INFO - Email successfully sent to aamir.khaaan@gmail.com
+2024-11-24 11:04:15,170 - INFO - 127.0.0.1 - - [24/Nov/2024 11:04:15] "POST /patient/register_patient HTTP/1.1" 200 -
+2024-11-24 11:04:18,050 - INFO - 127.0.0.1 - - [24/Nov/2024 11:04:18] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 11:04:24,789 - INFO - 127.0.0.1 - - [24/Nov/2024 11:04:24] "[31m[1mGET /logout HTTP/1.1[0m" 401 -
+2024-11-24 11:04:28,232 - INFO - 127.0.0.1 - - [24/Nov/2024 11:04:28] "GET /login HTTP/1.1" 200 -
+2024-11-24 11:04:43,284 - INFO - 127.0.0.1 - - [24/Nov/2024 11:04:43] "POST /login HTTP/1.1" 200 -
+2024-11-24 11:04:48,980 - INFO - 127.0.0.1 - - [24/Nov/2024 11:04:48] "GET /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 11:04:51,605 - INFO - 127.0.0.1 - - [24/Nov/2024 11:04:51] "POST /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 11:04:53,185 - INFO - 127.0.0.1 - - [24/Nov/2024 11:04:53] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 11:19:46,923 - INFO - Email successfully sent to aamir.khaaan@gmail.com
+2024-11-24 11:19:46,924 - INFO - 127.0.0.1 - - [24/Nov/2024 11:19:46] "POST /patient/register_patient HTTP/1.1" 200 -
+2024-11-24 11:19:48,945 - INFO - 127.0.0.1 - - [24/Nov/2024 11:19:48] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 11:19:51,279 - INFO - 127.0.0.1 - - [24/Nov/2024 11:19:51] "[31m[1mGET /logout HTTP/1.1[0m" 401 -
+2024-11-24 11:19:54,364 - INFO - 127.0.0.1 - - [24/Nov/2024 11:19:54] "GET /signup HTTP/1.1" 200 -
+2024-11-24 11:20:27,592 - INFO - 127.0.0.1 - - [24/Nov/2024 11:20:27] "POST /signup HTTP/1.1" 200 -
+2024-11-24 11:20:29,323 - INFO - 127.0.0.1 - - [24/Nov/2024 11:20:29] "GET /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 11:20:32,534 - INFO - 127.0.0.1 - - [24/Nov/2024 11:20:32] "POST /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 11:20:44,201 - INFO - 127.0.0.1 - - [24/Nov/2024 11:20:44] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 12:37:56,522 - INFO - 127.0.0.1 - - [24/Nov/2024 12:37:56] "[31m[1mGET /logout HTTP/1.1[0m" 401 -
+2024-11-24 12:38:01,009 - INFO - 127.0.0.1 - - [24/Nov/2024 12:38:01] "GET /login HTTP/1.1" 200 -
+2024-11-24 12:39:43,626 - INFO - 127.0.0.1 - - [24/Nov/2024 12:39:43] "POST /login HTTP/1.1" 200 -
+2024-11-24 12:39:45,026 - INFO - 127.0.0.1 - - [24/Nov/2024 12:39:45] "GET /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 12:39:47,233 - INFO - 127.0.0.1 - - [24/Nov/2024 12:39:47] "POST /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 12:39:53,143 - INFO - 127.0.0.1 - - [24/Nov/2024 12:39:53] "GET /patient/register_patient HTTP/1.1" 200 -
+2024-11-24 12:40:24,330 - DEBUG - STREAM b'IHDR' 16 13
+2024-11-24 12:40:24,331 - DEBUG - STREAM b'IDAT' 41 8192
+2024-11-24 12:40:38,478 - INFO - Email successfully sent to parshv.modi91@gmail.com
+2024-11-24 12:40:38,478 - INFO - 127.0.0.1 - - [24/Nov/2024 12:40:38] "POST /patient/register_patient HTTP/1.1" 200 -
+2024-11-24 12:40:42,277 - INFO - 127.0.0.1 - - [24/Nov/2024 12:40:42] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 12:40:49,223 - INFO - 127.0.0.1 - - [24/Nov/2024 12:40:49] "[31m[1mGET /logout HTTP/1.1[0m" 401 -
+2024-11-24 12:40:52,583 - INFO - 127.0.0.1 - - [24/Nov/2024 12:40:52] "GET /login HTTP/1.1" 200 -
+2024-11-24 12:43:08,186 - INFO - 127.0.0.1 - - [24/Nov/2024 12:43:08] "GET /signup HTTP/1.1" 200 -
+2024-11-24 12:43:29,275 - INFO - 127.0.0.1 - - [24/Nov/2024 12:43:29] "POST /signup HTTP/1.1" 200 -
+2024-11-24 12:43:30,536 - INFO - 127.0.0.1 - - [24/Nov/2024 12:43:30] "GET /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 12:43:32,943 - INFO - 127.0.0.1 - - [24/Nov/2024 12:43:32] "POST /verify_login_otp HTTP/1.1" 200 -
+2024-11-24 12:43:34,081 - INFO - 127.0.0.1 - - [24/Nov/2024 12:43:34] "GET /patient/register_patient HTTP/1.1" 200 -
+2024-11-24 12:44:24,198 - DEBUG - STREAM b'IHDR' 16 13
+2024-11-24 12:44:24,198 - DEBUG - STREAM b'IDAT' 41 8192
+2024-11-24 12:44:39,719 - INFO - Email successfully sent to aamir.khaaan@gmail.com
+2024-11-24 12:44:39,719 - INFO - 127.0.0.1 - - [24/Nov/2024 12:44:39] "POST /patient/register_patient HTTP/1.1" 200 -
+2024-11-24 12:44:45,583 - INFO - 127.0.0.1 - - [24/Nov/2024 12:44:45] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-24 12:46:09,571 - INFO - 127.0.0.1 - - [24/Nov/2024 12:46:09] "[31m[1mGET /logout HTTP/1.1[0m" 401 -
+2024-11-28 11:20:26,203 - DEBUG - STREAM b'IHDR' 16 13
+2024-11-28 11:20:26,203 - DEBUG - STREAM b'IDAT' 41 8192
+2024-11-28 11:20:40,027 - INFO - Email successfully sent to kabir.23bce10815@vitbhopal.ac.in
+2024-11-28 11:20:40,028 - INFO - 127.0.0.1 - - [28/Nov/2024 11:20:40] "POST /patient/register_patient HTTP/1.1" 200 -
+2024-11-28 11:20:40,568 - INFO - Email successfully sent to kabir.23bce10815@vitbhopal.ac.in
+2024-11-28 11:20:40,569 - INFO - 127.0.0.1 - - [28/Nov/2024 11:20:40] "POST /patient/register_patient HTTP/1.1" 200 -
+2024-11-28 11:20:44,489 - INFO - 127.0.0.1 - - [28/Nov/2024 11:20:44] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-28 11:20:46,855 - INFO - 127.0.0.1 - - [28/Nov/2024 11:20:46] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-11-28 11:26:00,803 - INFO - 127.0.0.1 - - [28/Nov/2024 11:26:00] "[31m[1mGET /logout HTTP/1.1[0m" 401 -
+2024-11-28 11:26:04,487 - INFO - 127.0.0.1 - - [28/Nov/2024 11:26:04] "GET /login HTTP/1.1" 200 -
+2024-11-28 11:26:06,671 - INFO - 127.0.0.1 - - [28/Nov/2024 11:26:06] "GET /forgot-password HTTP/1.1" 200 -
+2024-11-28 11:26:33,391 - INFO - 127.0.0.1 - - [28/Nov/2024 11:26:33] "[32mPOST /forgot-password HTTP/1.1[0m" 302 -
+2024-11-28 11:26:33,397 - INFO - 127.0.0.1 - - [28/Nov/2024 11:26:33] "GET /verify_reset_otp?user_id=32 HTTP/1.1" 200 -
+2024-11-28 11:26:34,668 - INFO - 127.0.0.1 - - [28/Nov/2024 11:26:34] "GET /verify_reset_otp HTTP/1.1" 200 -
+2024-11-28 11:26:37,514 - INFO - 127.0.0.1 - - [28/Nov/2024 11:26:37] "[32mPOST /verify_reset_otp HTTP/1.1[0m" 302 -
+2024-11-28 11:26:37,518 - INFO - 127.0.0.1 - - [28/Nov/2024 11:26:37] "GET /reset-password/32 HTTP/1.1" 200 -
+2024-11-28 11:26:38,751 - INFO - 127.0.0.1 - - [28/Nov/2024 11:26:38] "GET /reset-password/32 HTTP/1.1" 200 -
+2024-11-28 11:26:57,705 - INFO - 127.0.0.1 - - [28/Nov/2024 11:26:57] "POST /reset-password/32 HTTP/1.1" 200 -
+2024-11-28 11:27:00,527 - INFO - 127.0.0.1 - - [28/Nov/2024 11:27:00] "GET /login HTTP/1.1" 200 -
+2024-11-28 11:27:17,353 - INFO - 127.0.0.1 - - [28/Nov/2024 11:27:17] "POST /login HTTP/1.1" 200 -
+2024-11-28 11:27:18,489 - INFO - 127.0.0.1 - - [28/Nov/2024 11:27:18] "POST /login HTTP/1.1" 200 -
+2024-11-28 11:27:20,010 - INFO - 127.0.0.1 - - [28/Nov/2024 11:27:20] "POST /login HTTP/1.1" 200 -
+2024-11-28 11:27:20,186 - INFO - 127.0.0.1 - - [28/Nov/2024 11:27:20] "GET /verify_login_otp HTTP/1.1" 200 -
+2024-11-28 11:27:20,829 - INFO - 127.0.0.1 - - [28/Nov/2024 11:27:20] "POST /login HTTP/1.1" 200 -
+2024-11-28 11:27:21,330 - INFO - 127.0.0.1 - - [28/Nov/2024 11:27:21] "GET /verify_login_otp HTTP/1.1" 200 -
+2024-11-28 11:27:30,011 - INFO - 127.0.0.1 - - [28/Nov/2024 11:27:30] "POST /verify_login_otp HTTP/1.1" 200 -
+2024-11-28 11:27:31,433 - INFO - 127.0.0.1 - - [28/Nov/2024 11:27:31] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-12-16 14:24:15,293 - DEBUG - STREAM b'IHDR' 16 13
+2024-12-16 14:24:15,294 - DEBUG - STREAM b'IDAT' 41 8192
+2024-12-16 14:24:20,520 - INFO - Email successfully sent to tezu.shafiul@gmail.com
+2024-12-16 14:24:20,521 - INFO - 127.0.0.1 - - [16/Dec/2024 14:24:20] "POST /patient/register_patient HTTP/1.1" 200 -
+2024-12-16 14:24:22,227 - INFO - 127.0.0.1 - - [16/Dec/2024 14:24:22] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-12-16 14:24:26,878 - INFO - 127.0.0.1 - - [16/Dec/2024 14:24:26] "GET /patient/view_appointments HTTP/1.1" 200 -
+2024-12-16 14:24:29,558 - INFO - 127.0.0.1 - - [16/Dec/2024 14:24:29] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-12-16 14:24:29,635 - INFO - Email successfully sent to tezu.shafiul@gmail.com
+2024-12-16 14:24:29,637 - INFO - 127.0.0.1 - - [16/Dec/2024 14:24:29] "POST /patient/register_patient HTTP/1.1" 200 -
+2024-12-16 14:24:30,639 - INFO - 127.0.0.1 - - [16/Dec/2024 14:24:30] "GET /patient/create_appointment HTTP/1.1" 200 -
+2024-12-16 14:24:54,158 - INFO - 127.0.0.1 - - [16/Dec/2024 14:24:54] "[32mPOST /patient/create_appointment HTTP/1.1[0m" 302 -
+2024-12-16 14:24:54,161 - INFO - 127.0.0.1 - - [16/Dec/2024 14:24:54] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-12-16 14:24:55,688 - INFO - 127.0.0.1 - - [16/Dec/2024 14:24:55] "GET /patient/view_appointments HTTP/1.1" 200 -
+2024-12-16 14:25:00,305 - INFO - 127.0.0.1 - - [16/Dec/2024 14:25:00] "GET /patient/dashboard HTTP/1.1" 200 -
+2024-12-16 14:25:10,543 - INFO - 127.0.0.1 - - [16/Dec/2024 14:25:10] "[31m[1mGET /logout HTTP/1.1[0m" 401 -
+2024-12-16 14:25:15,710 - INFO - 127.0.0.1 - - [16/Dec/2024 14:25:15] "GET /login HTTP/1.1" 200 -
+2024-12-16 14:25:53,797 - INFO - 127.0.0.1 - - [16/Dec/2024 14:25:53] "POST /login HTTP/1.1" 200 -
+2024-12-16 14:25:55,119 - INFO - 127.0.0.1 - - [16/Dec/2024 14:25:55] "GET /verify_login_otp HTTP/1.1" 200 -
+2024-12-16 14:26:03,550 - INFO - 127.0.0.1 - - [16/Dec/2024 14:26:03] "POST /verify_login_otp HTTP/1.1" 200 -
+2024-12-16 14:26:04,960 - INFO - 127.0.0.1 - - [16/Dec/2024 14:26:04] "GET /doctor/dashboard HTTP/1.1" 200 -
+2024-12-16 14:26:09,882 - INFO - 127.0.0.1 - - [16/Dec/2024 14:26:09] "GET /doctor/view_appointments HTTP/1.1" 200 -
+2024-12-16 14:26:15,330 - INFO - 127.0.0.1 - - [16/Dec/2024 14:26:15] "GET /doctor/dashboard HTTP/1.1" 200 -
+2024-12-16 14:26:19,497 - INFO - 127.0.0.1 - - [16/Dec/2024 14:26:19] "[31m[1mGET /logout HTTP/1.1[0m" 401 -
+2024-12-16 14:26:22,595 - INFO - 127.0.0.1 - - [16/Dec/2024 14:26:22] "GET /login HTTP/1.1" 200 -
+2024-12-16 14:26:31,948 - INFO - 127.0.0.1 - - [16/Dec/2024 14:26:31] "[31m[1mPOST /login HTTP/1.1[0m" 400 -
+2024-12-16 14:26:45,231 - INFO - 127.0.0.1 - - [16/Dec/2024 14:26:45] "[31m[1mPOST /login HTTP/1.1[0m" 400 -
+2024-12-16 14:26:58,416 - INFO - 127.0.0.1 - - [16/Dec/2024 14:26:58] "POST /login HTTP/1.1" 200 -
+2024-12-16 14:27:04,073 - INFO - 127.0.0.1 - - [16/Dec/2024 14:27:04] "GET /verify_login_otp HTTP/1.1" 200 -
+2024-12-16 14:27:13,189 - INFO - 127.0.0.1 - - [16/Dec/2024 14:27:13] "POST /verify_login_otp HTTP/1.1" 200 -
+2024-12-16 14:27:15,125 - INFO - 127.0.0.1 - - [16/Dec/2024 14:27:15] "GET /dashboard HTTP/1.1" 200 -
+2024-12-16 14:57:58,489 - INFO - 127.0.0.1 - - [16/Dec/2024 14:57:58] "GET /doctor/view_doctor HTTP/1.1" 200 -
+2024-12-16 14:58:03,495 - INFO - 127.0.0.1 - - [16/Dec/2024 14:58:03] "GET /doctor/add_doctor HTTP/1.1" 200 -
+2024-12-16 14:58:03,513 - INFO - 127.0.0.1 - - [16/Dec/2024 14:58:03] "[33mGET /static/css/styles.css HTTP/1.1[0m" 404 -
+2024-12-16 14:58:07,322 - INFO - 127.0.0.1 - - [16/Dec/2024 14:58:07] "GET /doctor/view_doctor HTTP/1.1" 200 -
+2024-12-16 14:58:17,386 - INFO - 127.0.0.1 - - [16/Dec/2024 14:58:17] "GET /doctor/edit_doctor/DR-535122-200606 HTTP/1.1" 200 -
+2024-12-16 14:58:29,679 - INFO - 127.0.0.1 - - [16/Dec/2024 14:58:29] "GET /dashboard HTTP/1.1" 200 -
+2024-12-16 14:59:12,896 - INFO - 127.0.0.1 - - [16/Dec/2024 14:59:12] "[31m[1mGET /logout HTTP/1.1[0m" 401 -

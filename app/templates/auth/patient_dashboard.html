@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #3f51b5;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        .dashboard {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .dashboard-welcome h2 {
+            color: #3f51b5;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-links {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-links a {
+            color: #3f51b5;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 15px;
+            border: 2px solid #3f51b5;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dashboard-links a:hover {
+            background-color: #3f51b5;
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+            padding: 15px;
+            background-color: #fafafa;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section h3 {
+            color: #3f51b5;
+        }
+
+        .content-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .content-section li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Welcome, {{ user_role }}!</h1>
+        <nav class="nav">
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <section class="dashboard">
+        <div class="dashboard-welcome">
+            <h2>Your Dashboard</h2>
+            <p>Manage your appointments and medical records effortlessly.</p>
+        </div>
+
+        <div class="dashboard-links">
+            <a href="/patient/view_appointments">View Appointments</a>
+            <a href="/patient/create_appointment">Create Appointments</a>
+            <a href="#" onclick="showSection('history')">View Medical History</a>
+            <a href="#">Update Profile</a>
+        </div>
+
+        <div class="content-section" id="appointments">
+            <h3>Upcoming Appointments</h3>
+            <ul>
+                <li>Appointment with Dr. John Doe on December 5, 2024 at 10:00 AM</li>
+                <li>Appointment with Dr. Jane Smith on December 10, 2024 at 02:00 PM</li>
+            </ul>
+        </div>
+
+        <div class="content-section" id="history">
+            <h3>Your Medical History</h3>
+            <ul>
+                <li>Blood Pressure: Normal (Date: November 10, 2024)</li>
+                <li>Prescription: Paracetamol 500mg (Date: November 12, 2024)</li>
+            </ul>
+        </div>
+    </section>
+
+    <script>
+        
+    </script>
+</body>
+</html>

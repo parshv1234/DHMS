@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Appointment</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #3f51b5;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .container h1 {
+            color: #3f51b5;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #3f51b5;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+
+        .btn-primary {
+            background-color: #3f51b5;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #303f9f;
+        }
+
+        .btn {
+            background-color: #3f51b5;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: inline-block;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #303f9f;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Welcome, {{ user_role }}!</h1>
+        <nav class="nav">
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1>Create Appointment</h1>
+        <p><a href="{{ url_for('auth.patient_dashboard') }}" class="btn">Back To Dashboard</a></p>
+        <form method="POST" action="{{ url_for('patient.create_appointment') }}">
+            <div class="form-group">
+                <label for="doctor_id">Select Doctor:</label>
+                <select name="doctor_id" id="doctor_id" class="form-control" required>
+                    {% for doctor in doctors %}
+                        <option value="{{ doctor.id }}">{{ doctor.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="appointment_date">Date:</label>
+                <input type="date" name="appointment_date" id="appointment_date" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="appointment_time">Time:</label>
+                <input type="time" name="appointment_time" id="appointment_time" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="reason">Reason:</label>
+                <textarea name="reason" id="reason" class="form-control" rows="4" required></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

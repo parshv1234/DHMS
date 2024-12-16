@@ -1,0 +1,212 @@
+<!-- view_doctor.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors List</title>
+    <style>
+        /* Body styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Heading styling */
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #2c3e50;
+        }
+
+        /* Table styling */
+        table {
+            width: 80%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+
+        th, td {
+            padding: 12px 18px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        td, th {
+            text-align: center;
+        }
+
+        /* Container styling */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Button container */
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Search bar styling */
+        .search-bar {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 50%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        /* Edit button */
+        .edit-btn {
+            padding: 5px 10px;
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            background-color: #e67e22;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Doctors List</h1>
+
+        <!-- Search bar -->
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search doctors..." onkeyup="searchDoctors()">
+        </div>
+
+        <!-- Doctors Table -->
+        <table id="doctor-table">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">ID</th>
+                    <th onclick="sortTable(1)">Name</th>
+                    <th onclick="sortTable(2)">Age</th>
+                    <th onclick="sortTable(3)">Department</th>
+                    <th onclick="sortTable(4)">Email</th>
+                    <th onclick="sortTable(5)">Last Login</th>
+                    <th>Actions</th> <!-- Column for the action buttons -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for doctor in doctors %}
+                <tr>
+                    <td>{{ doctor.id }}</td>
+                    <td>{{ doctor.name }}</td>
+                    <td>{{ doctor.age }}</td>
+                    <td>{{ doctor.department_name }}</td>
+                    <td>{{ doctor.email_id }}</td>
+                    <td>{{ doctor.last_login.strftime('%Y-%m-%d %H:%M:%S') if doctor.last_login else 'N/A' }}</td>
+                    <td>
+                        <!-- Edit Button -->
+                        <button class="edit-btn" onclick="window.location.href='/doctor/edit_doctor/{{ doctor.id }}'">Edit</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Button container for additional features like adding a new doctor -->
+        <div class="button-container">
+            <button onclick="window.location.href='/doctor/add_doctor'">Add Doctor</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to filter doctors based on the search input
+        function searchDoctors() {
+            let input = document.getElementById("search-input").value.toLowerCase();
+            let table = document.getElementById("doctor-table");
+            let rows = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < rows.length; i++) {
+                let cells = rows[i].getElementsByTagName("td");
+                let matchFound = false;
+
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j].textContent.toLowerCase().includes(input)) {
+                        matchFound = true;
+                        break;
+                    }
+                }
+
+                if (matchFound) {
+                    rows[i].style.display = "";
+                } else {
+                    rows[i].style.display = "none";
+                }
+            }
+        }
+
+        // Function to sort the table by a specific column
+        function sortTable(columnIndex) {
+            let table = document.getElementById("doctor-table");
+            let rows = Array.from(table.rows).slice(1); // Skip header row
+            let sortedRows = rows.sort((a, b) => {
+                let cellA = a.cells[columnIndex].textContent.trim();
+                let cellB = b.cells[columnIndex].textContent.trim();
+
+                // Compare based on the column type
+                if (columnIndex === 5) { // If it's the "Last Login" column, compare date
+                    return new Date(cellA) - new Date(cellB);
+                } else {
+                    return cellA.localeCompare(cellB);
+                }
+            });
+
+            // Append sorted rows back into the table
+            for (let row of sortedRows) {
+                table.appendChild(row);
+            }
+        }
+    </script>
+
+</body>
+</html>

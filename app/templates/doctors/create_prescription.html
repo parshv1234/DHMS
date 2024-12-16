@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Prescription</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Aesthetic and Modern CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1abc9c, #2c3e50);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .container h1 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2c3e50;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #1abc9c;
+            outline: none;
+        }
+        .btn {
+            background-color: #1abc9c;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #16a085;
+        }
+        .flash-message {
+            margin-bottom: 20px;
+            color: #d9534f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Prescription</h1>
+        
+        <!-- Flash Message Display -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form id="prescriptionForm" method="POST" action="{{ url_for('doctor.create_prescription') }}">
+            <div class="form-group">
+                <label for="patient_id">Patient ID:</label>
+                <input type="text" id="patient_id" name="patient_id" placeholder="Enter patient ID" required>
+            </div>
+
+            <div class="form-group">
+                <label for="prescription_details">Prescription Details:</label>
+                <textarea id="prescription_details" name="details" rows="5" placeholder="Enter prescription details" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn">Submit Prescription</button>
+        </form>
+    </div>
+
+    <!-- Simple JS Validation -->
+    <script>
+        document.getElementById('prescriptionForm').addEventListener('submit', function(event) {
+            const patientId = document.getElementById('patient_id').value.trim();
+            const details = document.getElementById('prescription_details').value.trim();
+            if (patientId === '' || details === '') {
+                alert('All fields are required.');
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

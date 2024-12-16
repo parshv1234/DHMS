@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Patient</title>
+    <style>
+        /* Global styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container styling */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Heading styling */
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            color: #333;
+        }
+
+        /* Flash message styling */
+        .flash-message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .flash-message.success {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .flash-message.danger {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Form styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        /* Submit button styling */
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Focus effects */
+        input:focus, select:focus, textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        /* Media query for responsiveness */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Register Patient</h1>
+
+        <!-- Flash message section -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-message {{ messages[0][0] }}">
+                    <ul>
+                        {% for category, message in messages %}
+                            <li class="{{ category }}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Registration form -->
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" required min="0">
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="contact_number_1">Contact Number 1:</label>
+                <input type="text" id="contact_number_1" name="contact_number_1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contact_number_2">Contact Number 2:</label>
+                <input type="text" id="contact_number_2" name="contact_number_2">
+            </div>
+
+            <div class="form-group">
+                <label for="email_id">Email:</label>
+                <input type="email" id="email_id" name="email_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <textarea id="address" name="address" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="next_of_kin_name">Next of Kin Name:</label>
+                <input type="text" id="next_of_kin_name" name="next_of_kin_name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="next_of_kin_relation_to_patient">Relation to Patient:</label>
+                <input type="text" id="next_of_kin_relation_to_patient" name="next_of_kin_relation_to_patient" required>
+            </div>
+
+            <div class="form-group">
+                <label for="next_of_kin_contact_number">Next of Kin Contact:</label>
+                <input type="text" id="next_of_kin_contact_number" name="next_of_kin_contact_number" required>
+            </div>
+
+            <!-- Hidden input for patient_id -->
+            <input type="hidden" name="patient_id" value="{{ patient_id }}">
+
+            <input type="submit" value="Register Patient">
+        </form>
+
+        <!-- Display Patient ID -->
+        <p><strong>Patient ID:</strong> {{ patient_id }}</p>
+    </div>
+
+    <script>
+        function validateForm() {
+            const name = document.getElementById("name").value.trim();
+            const age = document.getElementById("age").value.trim();
+            const gender = document.getElementById("gender").value.trim();
+            const contact1 = document.getElementById("contact_number_1").value.trim();
+            const email = document.getElementById("email_id").value.trim();
+            const address = document.getElementById("address").value.trim();
+            const nextOfKinName = document.getElementById("next_of_kin_name").value.trim();
+            const nextOfKinContact = document.getElementById("next_of_kin_contact_number").value.trim();
+
+            const contactRegex = /^[0-9]{10}$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            // Check for required fields
+            if (!name || !age || !gender || !contact1 || !email || !address || !nextOfKinName || !nextOfKinContact) {
+                alert("All fields marked with * are required!");
+                return false;
+            }
+
+            // Validate age
+            if (isNaN(age) || age <= 0 || age > 120) {
+                alert("Please enter a valid age between 1 and 120.");
+                return false;
+            }
+
+            // Validate contact number
+            if (!contactRegex.test(contact1)) {
+                alert("Please enter a valid 10-digit contact number for Contact Number 1.");
+                return false;
+            }
+
+            // Validate email address
+            if (!emailRegex.test(email)) {
+                alert("Please enter a valid email address.");
+                return false;
+            }
+
+            // Validate Next of Kin contact number
+            if (!contactRegex.test(nextOfKinContact)) {
+                alert("Please enter a valid 10-digit contact number for Next of Kin.");
+                return false;
+            }
+
+            return true;
+        }
+
+        // Attach event listener to the form's submit event
+        document.getElementById("registerForm").addEventListener("submit", (e) => {
+            e.preventDefault(); // Prevent default form submission
+
+            if (validateForm()) {
+                // Collect form data
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+
+                // Send data to the server
+                fetch("/patient/register_patient", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        if (data.error) {
+                            alert("Registration failed: " + data.error);
+                        } else {
+                            alert("Registration successful! " + data.message);
+                            window.location.href = "/patient/dashboard"; // Redirect to dashboard
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        alert("An error occurred. Please try again later.");
+                    });
+            }
+        });
+    </script>
+</body>
+</html>

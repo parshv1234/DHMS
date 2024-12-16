@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification - DHMS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .otp-form h1 {
+            margin-bottom: 20px;
+            color: #6a11cb;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #6a11cb;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #2575fc;
+        }
+
+        .resend-link {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .resend-link a {
+            color: #6a11cb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .resend-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="otp-form">
+            <h1>Verify OTP</h1>
+            <form id="otpForm">
+                <div class="form-group">
+                    <label for="otp">Enter OTP sent to your email:</label>
+                    <input type="text" id="otp" name="otp" placeholder="Enter OTP" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn">Verify OTP</button>
+                </div>
+                <p class="resend-link">Didn't receive the OTP? <a href="/auth/resend-otp">Resend OTP</a></p>
+                <p class="resend-link"><a href="/login">Back to Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("otpForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const otp = formData.get("otp");
+
+            console.log("Verifying OTP...", otp);
+
+            fetch("/verify_login_otp", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ otp }),  // Send OTP in JSON format
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert("OTP verified successfully! Redirecting...");
+                    window.location.href = data.redirect_url;  // Redirect based on response from backend
+                } else {
+                    alert("Invalid or expired OTP. Please try again.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            });
+        });
+    </script>
+</body>
+</html>

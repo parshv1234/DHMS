@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard - Digital Healthcare Management{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f7fc;
+            font-family: 'Roboto', sans-serif;
+            color: #495057;
+        }
+
+        .sidebar {
+            background-color: #343a40;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            width: 250px;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            font-size: 18px;
+            display: block;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #007bff;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .navbar {
+            background-color: #007bff;
+            padding: 10px 15px;
+        }
+
+        .navbar a {
+            color: white;
+        }
+
+        .widget {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .widget h3 {
+            color: #007bff;
+            font-size: 1.5rem;
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+        }
+
+        .table td {
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f5f8;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+
+            .navbar-toggler {
+                background-color: white;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3 class="text-center mb-4">Admin Dashboard</h3>
+        <a href="{{ url_for('admin.dashboard') }}" class="{% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+        </a>
+        <a href="{{ url_for('department.list_departments') }}" class="{% if 'department.' in request.endpoint %}active{% endif %}">
+            <i class="fas fa-hospital me-2"></i> Departments
+        </a>
+        <a href="{{ url_for('admin.view_doctors') }}" class="{% if request.endpoint == 'admin.view_doctors' %}active{% endif %}">
+            <i class="fas fa-user-md me-2"></i> Doctors
+        </a>
+        <a href="{{ url_for('admin.view_patients') }}" class="{% if request.endpoint == 'admin.view_patients' %}active{% endif %}">
+            <i class="fas fa-procedures me-2"></i> Patients
+        </a>
+        <a href="{{ url_for('admin.view_appointments') }}" class="{% if request.endpoint == 'admin.view_appointments' %}active{% endif %}">
+            <i class="fas fa-calendar-alt me-2"></i> Appointments
+        </a>
+        <a href="{{ url_for('auth.logout') }}">
+            <i class="fas fa-sign-out-alt me-2"></i> Logout
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light mb-4">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Healthcare Admin</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content Block -->
+        {% block content %}
+        <!-- Dashboard Widgets -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="widget">
+                        <h3><i class="fas fa-user-md"></i> Total Doctors</h3>
+                        <p><strong>{{ doctor_count if doctor_count else 0 }}</strong></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="widget">
+                        <h3><i class="fas fa-procedures"></i> Total Patients</h3>
+                        <p><strong>{{ patient_count if patient_count else 0 }}</strong></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="widget">
+                        <h3><i class="fas fa-calendar-check"></i> Appointments</h3>
+                        <p><strong>{{ appointment_count if appointment_count else 0 }}</strong></p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="widget">
+                        <h3><i class="fas fa-hospital"></i> Departments</h3>
+                        <p><strong>{{ department_count if department_count else 0 }}</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% endblock %}
+    </div>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

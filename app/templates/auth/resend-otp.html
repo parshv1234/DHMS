@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resend OTP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        p {
+            text-align: center;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .alert {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .resend-timer {
+            font-weight: bold;
+            color: #FF5733;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Resend OTP</h2>
+        <p>If you didn’t receive your OTP, please enter your email to resend.</p>
+        <form id="resendOtpForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email" />
+            </div>
+            <button type="submit" id="resendButton">Resend OTP</button>
+        </form>
+
+        <div id="alertMessage" class="alert"></div>
+
+        <p id="timer" class="resend-timer"></p>
+    </div>
+
+    <script>
+        let countdown;
+        let timerDisplay = document.getElementById('timer');
+        let resendButton = document.getElementById('resendButton');
+        let alertMessage = document.getElementById('alertMessage');
+        let resendForm = document.getElementById('resendOtpForm');
+        
+        // Function to handle OTP resend button
+        function handleResendOtp(event) {
+            event.preventDefault();
+
+            let email = document.getElementById('email').value;
+
+            // Disable button to prevent multiple requests
+            resendButton.disabled = true;
+
+            // Show loading message
+            alertMessage.classList.remove('success');
+            alertMessage.textContent = 'Resending OTP...';
+            alertMessage.style.display = 'block';
+
+            // Simulate an OTP resend process (use AJAX or backend API call in real scenario)
+            setTimeout(() => {
+                alertMessage.textContent = 'OTP has been resent successfully!';
+                alertMessage.classList.add('success');
+                alertMessage.style.display = 'block';
+
+                // Re-enable the button after 5 seconds and start the timer
+                resendButton.disabled = false;
+                startTimer();
+            }, 5000);  // Simulate a 2 second delay for OTP resend
+        }
+
+        // Timer countdown for re-enabling resend button
+        function startTimer() {
+            let timeLeft = 15;  // 30 seconds countdown
+            timerDisplay.textContent = `You can resend OTP in ${timeLeft} seconds`;
+
+            countdown = setInterval(function () {
+                timeLeft -= 1;
+                timerDisplay.textContent = `You can resend OTP in ${timeLeft} seconds`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    timerDisplay.textContent = '';
+                }
+            }, 1000);
+        }
+
+        // Initialize form submit event listener
+        resendForm.addEventListener('submit', handleResendOtp);
+
+        // Start the countdown timer immediately on page load
+        startTimer();
+    </script>
+</body>
+</html>

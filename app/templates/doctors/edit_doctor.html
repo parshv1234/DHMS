@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Doctor</title>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 60%;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="text"], input[type="email"], input[type="date"], input[type="number"] {
+            width: 100%;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .flash-message {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .flash-message.success {
+            background-color: #4CAF50;
+        }
+
+        .flash-message.error {
+            background-color: #f44336;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #4CAF50;
+            font-size: 16px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Edit Doctor</h1>
+
+    <!-- Flash message for success or error -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="{{ doctor.name }}" required>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="Male" {% if doctor.gender == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if doctor.gender == 'Female' %}selected{% endif %}>Female</option>
+        </select>
+
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" value="{{ doctor.date_of_birth }}" required>
+
+        <label for="blood_group">Blood Group:</label>
+        <input type="text" id="blood_group" name="blood_group" value="{{ doctor.blood_group }}" required>
+
+        <label for="department_id">Department ID:</label>
+        <input type="text" id="department_id" name="department_id" value="{{ doctor.department_id }}" required>
+
+        <label for="department_name">Department Name:</label>
+        <input type="text" id="department_name" name="department_name" value="{{ doctor.department_name }}" required>
+
+        <label for="contact_number_1">Contact Number 1:</label>
+        <input type="text" id="contact_number_1" name="contact_number_1" value="{{ doctor.contact_number_1 }}" required>
+
+        <label for="contact_number_2">Contact Number 2:</label>
+        <input type="text" id="contact_number_2" name="contact_number_2" value="{{ doctor.contact_number_2 }}">
+
+        <label for="aadhar_or_voter_id">Aadhar/Voter ID:</label>
+        <input type="text" id="aadhar_or_voter_id" name="aadhar_or_voter_id" value="{{ doctor.aadhar_or_voter_id }}" required>
+
+        <label for="email_id">Email ID:</label>
+        <input type="email" id="email_id" name="email_id" value="{{ doctor.email_id }}" required>
+
+        <label for="qualification">Qualification:</label>
+        <input type="text" id="qualification" name="qualification" value="{{ doctor.qualification }}" required>
+
+        <label for="specialisation">Specialisation:</label>
+        <input type="text" id="specialisation" name="specialisation" value="{{ doctor.specialisation }}" required>
+
+        <label for="years_of_experience">Years of Experience:</label>
+        <input type="number" id="years_of_experience" name="years_of_experience" value="{{ doctor.years_of_experience }}" required>
+
+        <label for="address">Address:</label>
+        <textarea id="address" name="address" required>{{ doctor.address }}</textarea>
+
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city" value="{{ doctor.city }}" required>
+
+        <label for="state">State:</label>
+        <input type="text" id="state" name="state" value="{{ doctor.state }}" required>
+
+        <label for="pin_code">Pin Code:</label>
+        <input type="text" id="pin_code" name="pin_code" value="{{ doctor.pin_code }}" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+
+        <button type="submit">Update Doctor</button>
+    </form>
+
+    <a href="{{ url_for('doctor_bp.view_doctors') }}">Back to Doctor List</a>
+</div>
+
+<script>
+    // Example JavaScript validation
+    document.querySelector("form").addEventListener("submit", function(event) {
+        let email = document.getElementById("email_id").value;
+        let contact1 = document.getElementById("contact_number_1").value;
+
+        // Validate Email Format
+        let emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        if (!emailPattern.test(email)) {
+            Swal.fire('Invalid Email', 'Please enter a valid email address.', 'error');
+            event.preventDefault();
+        }
+
+        // Validate Contact Number
+        let phonePattern = /^\d{10}$/;
+        if (!phonePattern.test(contact1)) {
+            Swal.fire('Invalid Phone Number', 'Please enter a valid 10-digit phone number.', 'error');
+            event.preventDefault();
+        }
+    });
+</script>
+
+</body>
+</html>
