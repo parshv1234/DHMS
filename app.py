@@ -6,7 +6,8 @@ app = create_app()
 
 @app.route('/')
 def Home():
-	return render_template('./index.html')
+    print('HI')
+    return render_template('./index.html')
 
 @app.errorhandler(403)
 def unauthorized_access(e):

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Patients</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 90%;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table thead {
+            background-color: #4CAF50;
+            color: white;
+        }
+        table th, table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .refresh-button {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .refresh-button button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .refresh-button button:hover {
+            background-color: #45a049;
+        }
+        .search-bar {
+            padding: 10px;
+            text-align: right;
+        }
+        .search-bar input {
+            padding: 8px;
+            width: 30%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Patient Information</h1>
+        </header>
+        <div class="search-bar">
+            <input type="text" id="searchInput" onkeyup="searchTable()" placeholder="Search for names or doctors...">
+        </div>
+        <div class="table-container">
+            <table id="patientsTable">
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Email</th>
+                        <th>Contact Number</th>
+                        <th>Age</th>
+                        <th>Total Payments</th>
+                        <th>Assigned Doctor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                    <tr>
+                        <td>{{ patient.name }}</td>
+                        <td>{{ patient.email }}</td>
+                        <td>{{ patient.contact_number }}</td>
+                        <td>{{ patient.age }}</td>
+                        <td>${{ patient.total_payment }}</td>
+                        <td>{{ patient.assigned_doctor }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="refresh-button">
+            <button onclick="window.location.reload();">Refresh</button>
+        </div>
+        <br>
+        <div class="refresh-button">
+            <a href="{{ url_for('auth.admin_dashboard') }}" class="refresh-button">
+                <button type="button" class="btn">Back To Dashboard</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function searchTable() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById('patientsTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                let match = false;
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j]) {
+                        const textValue = cells[j].textContent || cells[j].innerText;
+                        if (textValue.toLowerCase().indexOf(filter) > -1) {
+                            match = true;
+                            break;
+                        }
+                    }
+                }
+                rows[i].style.display = match ? '' : 'none';
+            }
+        }
+    </script>
+</body>
+</html>

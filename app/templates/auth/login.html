@@ -7,7 +7,7 @@
     <style>
         /* CSS Styling */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(to right, #6a11cb, #2575fc);
             margin: 0;
             padding: 0;
@@ -20,58 +20,71 @@
 
         .container {
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             background: #fff;
-            padding: 20px 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
         }
 
         .login-form h1 {
             margin-bottom: 20px;
             color: #6a11cb;
+            font-size: 2rem;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-align: left;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-size: 14px;
             color: #555;
         }
 
         input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 16px;
             box-sizing: border-box;
+            transition: border 0.3s ease;
+        }
+
+        input:focus {
+            border: 1px solid #6a11cb;
+            outline: none;
         }
 
         button {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background: #6a11cb;
             color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, transform 0.3s ease;
         }
 
         button:hover {
             background: #2575fc;
+            transform: translateY(-3px);
         }
 
         .signup-link {
-            margin-top: 15px;
+            margin-top: 20px;
             font-size: 14px;
             color: #666;
         }
@@ -80,10 +93,56 @@
             color: #6a11cb;
             text-decoration: none;
             font-weight: bold;
+            transition: color 0.3s ease;
         }
 
         .signup-link a:hover {
+            color: #2575fc;
             text-decoration: underline;
+        }
+
+        /* Loading Spinner */
+        #loadingSpinner {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #6a11cb;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 25px;
+            }
+
+            .login-form h1 {
+                font-size: 1.8rem;
+            }
+
+            input {
+                padding: 14px;
+                font-size: 16px;
+            }
+
+            button {
+                padding: 14px;
+                font-size: 18px;
+            }
         }
     </style>
 </head>
@@ -106,6 +165,11 @@
                 <p class="signup-link">Don't have an account? <a href="/signup">Sign up</a></p>
                 <p class="signup-link"><a href="/forgot-password">Forgot Password?</a></p>
             </form>
+
+            <!-- Loading Spinner -->
+            <div id="loadingSpinner">
+                <div class="spinner"></div>
+            </div>
         </div>
     </div>
 
@@ -113,6 +177,9 @@
         // JavaScript for form submission
         document.getElementById("loginForm").addEventListener("submit", function (event) {
             event.preventDefault();
+
+            // Show loading spinner
+            document.getElementById('loadingSpinner').style.display = "block";
 
             // Collect form data
             const formData = new FormData(event.target);
@@ -133,6 +200,9 @@
                 body: JSON.stringify(data),
             })
                 .then((response) => {
+                    // Hide loading spinner
+                    document.getElementById('loadingSpinner').style.display = "none";
+
                     if (response.ok) {
                         alert("Login successful! Redirecting...");
                         window.location.href = "/verify_login_otp"; // Redirect to OTP verification page
@@ -141,6 +211,8 @@
                     }
                 })
                 .catch((error) => {
+                    // Hide loading spinner
+                    document.getElementById('loadingSpinner').style.display = "none";
                     console.error("Error:", error);
                     alert("An error occurred. Please try again.");
                 });

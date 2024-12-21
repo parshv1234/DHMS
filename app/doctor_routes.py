@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from app import db
 from app.models import Doctor
 from flask_mail import Message
@@ -9,7 +9,9 @@ from app.models import User, PrescriptionRecord, PatientRecord, Appointment
 from utils.rbac import role_required
 import uuid
 from app.auth_routes import auth_bp
-
+from PIL import Image
+import io
+from pyzxing import BarCodeReader
 
 # Define the blueprint for doctor-related routes
 doctor_bp = Blueprint('doctor_bp', __name__, template_folder='templates/doctors')
@@ -40,14 +42,16 @@ def login():
 
 
 # Logout route
-@auth_bp.route('/logout')
-@login_required
+@doctor_bp.route('/logout')
 def logout():
+    # Clear the session
     session.clear()
-    logout_user()  # Log out the current user
-    session.clear()  # Clear all session data
-    flash('You have been logged out.', 'info')
-    return redirect(url_for('auth_bp.login'))  # Redirect to login page
+    
+    # Flash a success message
+    flash('You have been logged out successfully.', 'success')
+    
+    # Redirect to the login page (adjust the endpoint as needed)
+    return redirect(url_for('auth.login'))  # Redirect to login page
 
 # Fetch all doctors from the database
 def get_all_doctors():
@@ -235,6 +239,13 @@ def create_prescription():
     # Render the prescription creation form
     return render_template('doctors/create_prescription.html')
 
+@doctor_bp.route('/scan_qr', methods=['GET'])
+def scan_qr_page():
+    """
+    Serve the QR code scanning page.
+    """
+    return render_template('scan_qr.html')
+
 @doctor_bp.route('/view_appointments')
 def view_appointments():
     try:
@@ -252,28 +263,151 @@ def view_appointments():
         # Fetch appointments for a specific doctor
         appointments = Appointment.query.filter_by(doctor_id=doctor.id).all()
         # appointments1 = Appointment.query.filter_by(patient_id=PatientRecord.id).all()
-        print(appointments)
         # print(appointments1)
 
-        # Collect unique patient IDs from the appointments
-        patient_ids = set([appointment.patient_id for appointment in appointments])  # Unique IDs
+        patient_ids = set([appointment.patient_id for appointment in appointments])
 
         # Fetch patient records for those IDs
-        patients = PatientRecord.query.filter(PatientRecord.id.in_(patient_ids)).all()
+        patients = {patient.id: patient.name for patient in PatientRecord.query.filter(PatientRecord.id.in_(patient_ids)).all()}
 
-        # Display patient names
-        if patients:
-            print("Patients associated with this doctor:")
-            for patient in patients:
-                print(f"Patient Name: {patient.name}, Patient ID: {patient.id}")
-        else:
-            print("No patients found in the database.")
+        # Map patient names to their respective appointments
+        for appointment in appointments:
+            appointment.patient_name = patients.get(appointment.patient_id, "Unknown")  # Add patient name or "Unknown"
 
-
-        return render_template('doctors/view_appointments.html', appointments=appointments, patient_name=patient.name)
+        print(appointments)
+        return render_template('doctors/view_appointments.html', appointments=appointments)
 
     except Exception as e:
         flash(f"An error occurred while fetching appointments: {str(e)}", "danger")
         print(f"An error occurred while fetching appointments: {str(e)}")
         return redirect(url_for('auth.doctor_dashboard'))  # Redirect to dashboard on error
+    
+import os
+from werkzeug.utils import secure_filename
+
+@doctor_bp.route('/scan_appointment', methods=['POST'])
+def scan_appointment():
+    print("In scan_appointment")
+
+    # Check if the file is present
+    if 'qr_code' in request.files:
+        file = request.files['qr_code']
+        if file.filename == '':
+            flash('No file selected.', 'danger')
+            print("No file selected.")
+            return redirect(url_for('doctor_bp.scan_qr_page'))
+
+        if file:
+            try:
+                # Ensure uploads directory exists
+                uploads_dir = os.path.join('app', 'static', 'uploads')
+                if not os.path.exists(uploads_dir):
+                    os.makedirs(uploads_dir)
+
+                # Save the file temporarily
+                filename = secure_filename(file.filename)
+                temp_path = os.path.join(uploads_dir, filename)
+                file.save(temp_path)
+                print(f"File saved temporarily at: {temp_path}")
+
+                # Load the image and decode the QR code
+                reader = BarCodeReader()
+                qr_code_data = reader.decode(temp_path)
+
+                if not qr_code_data:
+                    flash('Invalid or unreadable QR code.', 'danger')
+                    print("QR code not readable.")
+                    return redirect(url_for('doctor_bp.scan_qr_page'))
+
+                first_qr_code = qr_code_data[0]
+                parsed_data = first_qr_code.get('parsed') if isinstance(first_qr_code, dict) else None
+
+                if not parsed_data:
+                    flash('No valid data found in QR code.', 'danger')
+                    print("No valid data found in QR code.")
+                    return redirect(url_for('doctor_bp.scan_qr_page'))
+
+                parsed_data = parsed_data.decode('utf-8').strip()
+                print(f"Parsed data from QR code: {parsed_data}")
+                lines = parsed_data.split('\n')
+                appointment_id = lines[0].split(': ')[1]
+                print(f"Appointment ID extracted: {appointment_id}")
+
+                # Fetch the appointment from the database
+                appointment = Appointment.query.filter_by(id=appointment_id).first()
+                print(f"Appointment fetched from DB: {appointment}")
+
+                if not appointment:
+                    flash('No appointment found for the provided QR code.', 'danger')
+                    print("No appointment found for the given ID.")
+                    return redirect(url_for('doctor_bp.scan_qr_page'))
+
+                if appointment.status == "Done":
+                    flash('This appointment is already marked as done. No further scanning is required.', 'info')
+                    print("Appointment already marked as 'Done'.")
+                    return redirect(url_for('doctor_bp.scan_qr_page'))
+
+                # If no charges are provided yet, display appointment details page
+                return render_template('appointment_details.html', appointment=appointment)
+
+            except Exception as e:
+                print(f"Error processing QR code: {e}")
+                flash(f"An error occurred while processing the QR code: {str(e)}", 'danger')
+                return redirect(url_for('doctor_bp.scan_qr_page'))
+
+    # If charges are provided in the form, update the appointment
+    charges = request.form.get('charges')
+    if charges:
+        try:
+            charges = float(charges)
+            print(f"Charges input by doctor: {charges}")
+
+            # Fetch the appointment again (by ID from the hidden field)
+            appointment_id = request.form.get('appointment_id')
+            appointment = Appointment.query.filter_by(id=appointment_id).first()
+
+            if not appointment:
+                flash('No appointment found.', 'danger')
+                return redirect(url_for('doctor_bp.scan_qr_page'))
+
+            # Update the charges and mark the appointment as 'Done'
+            appointment.charges = charges
+            appointment.status = 'Done'
+            db.session.commit()  # Commit the changes to the database
+            flash('Charges saved successfully and appointment marked as done.', 'success')
+            print("Charges saved and appointment status updated.")
+            
+            # Redirect to the list of appointments
+            return redirect(url_for('doctor_bp.view_appointments'))  # Redirect to the list of appointments
+
+        except ValueError:
+            flash('Invalid charge amount entered. Please enter a valid number.', 'danger')
+            print("Invalid charge amount entered.")
+
+    # If no charges are provided, show the appointment details page again
+    flash('Unexpected error occurred. Please try again.', 'danger')
+    return redirect(url_for('doctor_bp.scan_qr_page'))
+
+
+
+
+@doctor_bp.route('/view_appointment/<int:appointment_id>', methods=['GET'])
+def view_appointment(appointment_id):
+    """
+    Fetch and display appointment details.
+    """
+    try:
+        # Fetch appointment details from the database
+        appointment = Appointment.query.get(appointment_id)
+        if not appointment:
+            return jsonify({'error': 'Appointment not found'}), 404
+
+        # Example: Update the appointment status
+        appointment.status = "Viewed"  # Mark the appointment as viewed
+        db.session.commit()
+
+        # Render the appointment details
+        return render_template('view_appointment.html', appointment=appointment)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 

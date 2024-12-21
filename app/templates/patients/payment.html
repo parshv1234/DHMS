@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Payment Portal</title>
+    <style>
+        /* General Reset */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        /* Fade-in effect */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+            color: #555;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border: 2px solid #007bff;
+            outline: none;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Table Styles */
+        .history-table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+
+        .history-table th, .history-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .history-table th {
+            background-color: #f4f7f6;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .history-table td {
+            color: #555;
+        }
+
+        .status {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .status.pending {
+            background-color: #ffc107;
+            color: #fff;
+        }
+
+        .status.completed {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .status.failed {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        /* QR Code Section */
+        #qrCodeSection {
+            display: none;
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px dashed #007bff;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        #qrCodeImage {
+            max-width: 200px;
+            margin: 15px 0;
+        }
+
+        .payment-link {
+            display: inline-block;
+            color: #007bff;
+            font-size: 1.1rem;
+            text-decoration: none;
+            margin-top: 10px;
+            transition: text-decoration 0.3s ease;
+        }
+
+        .payment-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media only screen and (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            button {
+                font-size: 1rem;
+            }
+
+            .history-table th, .history-table td {
+                padding: 10px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Patient Payment Portal</h1>
+
+        <!-- Payment Creation Section -->
+        <h2>Make a Payment</h2>
+        <div class="form-group">
+            <label for="patient_id">Patient ID</label>
+            <input type="text" id="patient_id" placeholder="Enter Patient ID">
+        </div>
+        <div class="form-group">
+            <label for="doctor_id">Doctor ID</label>
+            <input type="text" id="doctor_id" placeholder="Enter Doctor ID">
+        </div>
+        <button id="createPaymentBtn">Create Payment</button>
+
+        <!-- QR Code Section -->
+        <div id="qrCodeSection">
+            <h2>Scan QR Code to Complete Payment</h2>
+            <img id="qrCodeImage" alt="QR Code">
+            <p><strong>Note:</strong> Once the payment is completed, refresh the page to update payment status.</p>
+            <a id="paymentLink" class="payment-link" href="#" target="_blank" onclick="initiatePayment()">Click here to complete your payment</a>
+        </div>
+
+        <!-- Payment History Section -->
+        <h2>Payment History</h2>
+        <div class="form-group">
+            <label for="patient_id_history">Patient ID</label>
+            <input type="text" id="patient_id_history" placeholder="Enter Patient ID to fetch history">
+        </div>
+        <button id="fetchPaymentHistoryBtn">Fetch Payment History</button>
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Doctor ID</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="paymentHistory">
+                <tr>
+                    <td colspan="5">No payment history found.</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="back">
+            <h1></h1>
+            <button onclick="return confirmBackAndRedirect()" class="btn">Back to Dashboard</button>
+        </div>
+    </div>
+
+    <!-- Razorpay Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        function confirmBackAndRedirect() {
+            // Display confirmation dialog
+            if (confirm('Are you sure you want to go back to the dashboard?')) {
+                // Redirect to the dashboard if confirmed
+                window.location.href = "{{ url_for('auth.patient_dashboard') }}";
+            }
+            // If canceled, do nothing (return false)
+            return false;
+        }
+
+        // Create Payment
+        document.getElementById('createPaymentBtn').addEventListener('click', async () => {
+            const patientId = document.getElementById('patient_id').value;
+            const doctorId = document.getElementById('doctor_id').value;
+
+            if (!patientId || !doctorId) {
+                alert('Patient ID and Doctor ID are required!');
+                return;
+            }
+
+            try {
+                // Fetch the amount from the server based on patient_id and doctor_id
+                const response = await fetch(`/payments/get_amount?patient_id=${patientId}&doctor_id=${doctorId}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    console.error('Error fetching amount:', data);
+                    alert(data.error || 'Error fetching payment amount');
+                    return;
+                }
+
+                const amount = data.amount;
+
+                if (!amount) {
+                    alert('No charges found for the selected patient and doctor.');
+                    return;
+                }
+
+                // Create payment
+                const paymentResponse = await fetch('/payments/create_payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ patient_id: patientId, doctor_id: doctorId, amount: amount })
+                });
+
+                const paymentData = await paymentResponse.json();
+                if (paymentResponse.ok) {
+                    document.getElementById('qrCodeSection').style.display = 'block';
+                    document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?data=${paymentData.payment_url}`;
+                    document.getElementById('paymentLink').href = paymentData.payment_url;
+                } else {
+                    console.error('Payment creation error:', paymentData);
+                    alert(paymentData.error || 'Error creating payment');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to create payment. Please try again later.');
+            }
+        });
+
+
+        let razorpayKey = null;
+
+        // Fetch Razorpay key from the server
+        fetch('/payments/get_razorpay_key')
+            .then(response => response.json())
+            .then(data => {
+                razorpayKey = data.razorpay_key;
+            })
+            .catch(error => {
+                console.error('Error fetching Razorpay key:', error);
+                alert('Failed to load payment configuration.');
+            });
+        // Razorpay Checkout
+        function initiatePayment() {
+            const payment_url = document.getElementById('paymentLink').href;
+            const order_id = payment_url.split('/l/')[1]; // Extract the order ID from the URL
+
+            const options = {
+                "key": "razorpayKey",  // Replace with your Razorpay key
+                "order_id": order_id,
+                "handler": function (response) {
+                    console.log("Payment successful:", response);
+                    fetch('/payments/payment_callback', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({
+                            'razorpay_payment_id': response.razorpay_payment_id,
+                            'razorpay_order_id': order_id,
+                            'razorpay_signature': response.razorpay_signature
+                        })
+                    })
+                    .then(callbackResponse => callbackResponse.json())
+                    .then(callbackData => {
+                        if (callbackData.status === 'success') {
+                            alert("Payment successful and callback processed successfully!");
+                        } else {
+                            alert("Payment successful, but there was an issue processing the callback.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error sending payment callback:", error);
+                        alert('Error processing the payment callback.');
+                    });
+                },
+                "theme": { "color": "#007bff" }
+            };
+
+            const rzp = new Razorpay(options);
+            rzp.open();
+        }
+
+        // Fetch Payment History
+        document.getElementById('fetchPaymentHistoryBtn').addEventListener('click', () => {
+            const patientId = document.getElementById('patient_id_history').value.trim();
+            if (!patientId) {
+                alert('Patient ID is required to fetch payment history.');
+                return;
+            }
+
+            fetch(`/payments/patient_payments?patient_id=${encodeURIComponent(patientId)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+                    const tableBody = document.getElementById('paymentHistory');
+                    tableBody.innerHTML = '';
+                    if (data.length === 0) {
+                        const row = `<tr><td colspan="5">No payment history found.</td></tr>`;
+                        tableBody.innerHTML = row;
+                        return;
+                    }
+                    data.forEach(payment => {
+                        const row = `
+                            <tr>
+                                <td>${payment.payment_id}</td>
+                                <td>${payment.doctor_id}</td>
+                                <td>${payment.amount}</td>
+                                <td><span class="status ${payment.status.toLowerCase()}">${payment.status}</span></td>
+                                <td>${new Date(payment.date).toLocaleDateString()}</td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching payment history:', error);
+                    alert('Failed to fetch payment history. Please try again later.');
+                });
+        });
+    </script>
+</body>
+</html>

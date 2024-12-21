@@ -6,14 +6,13 @@ from utils.otp import generate_otp, send_otp, verify_otp  # Corrected import for
 from datetime import datetime, timedelta
 from utils.rbac import role_required
 
-
 auth_bp = Blueprint('auth', __name__, template_folder='templates/auth')
 
 @auth_bp.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         # Handle form data from the frontend
-        data=request.get_json()
+        data = request.get_json()
         username = data.get('username')
         email = data.get('email')
         phone = data.get('phone')
@@ -54,7 +53,7 @@ def signup():
         print(otp)
         if send_otp(email, otp):
             session['email'] = email  # Store email in session for later OTP verification
-            return jsonify({ "message": "Redirecting to verify otp..." })  # Ensure this route exists
+            return jsonify({"message": "Redirecting to verify otp..."})  # Ensure this route exists
         else:
             flash("Error sending OTP. Please try again.")
             return jsonify({"error": "Error sending OTP."}), 500
@@ -62,10 +61,9 @@ def signup():
     return render_template('signup.html')
 
 
-# Updated Login Route
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
+    if request.method == 'POST':  # Check if it's a POST request
         data = request.get_json()
         email = data.get('email')
         password = data.get('password')
@@ -87,9 +85,13 @@ def login():
 
                 # Send OTP and save session details
                 if send_otp(email, otp):
+                    # Save user email and role in the session for OTP verification
                     session['email'] = email
                     session['role'] = user.role if hasattr(user, 'role') else 'doctor'
-                    return jsonify({"message": "OTP sent to email. Please verify."}), 200
+
+                    return jsonify({
+                        "message": "OTP sent to email. Please verify."
+                    }), 200
                 else:
                     flash("Error sending OTP. Please try again.")
                     return jsonify({"error": "Error sending OTP."}), 400
@@ -100,6 +102,7 @@ def login():
             flash("Invalid email.")
             return jsonify({"error": "Invalid email."}), 400
 
+    # Handle GET request: render the login template
     return render_template('auth/login.html')
 
 
@@ -157,10 +160,10 @@ def verify_login_otp():
 # OTP Verification Route for Forgot Password
 @auth_bp.route('/verify_reset_otp', methods=['GET', 'POST'])
 def verify_reset_otp():
-    email = session.get('email')
-    user = User.query.filter_by(email=email).first()
+    email = session.get('user_email')
+    user = User.query.filter(User.email == email).first()
     if request.method == 'POST':
-          # Get email from session
+        # Get email from session
         data = request.get_json()
         user_otp = data.get("otp")
 
@@ -169,7 +172,6 @@ def verify_reset_otp():
             if is_valid:
                 # Retrieve user from the database using the email
                 if user:
-                    # print("User ID:", user.id)
                     flash("OTP verified successfully! You can now reset your password.")
                     session['usersId'] = user.id  # Store user_id in session for later use
                     return redirect(url_for('auth.reset_password', user_id=user.id))  # Dynamically include user_id
@@ -181,11 +183,9 @@ def verify_reset_otp():
         else:
             flash("Invalid OTP. Please try again.")
 
-    # If user is None, it means the session is invalid or expired
     if not user:
         flash("User not found or session expired. Please login again.")
         return redirect(url_for('auth.forgot_password'))  # Redirect to forgot-password page if user not found
-
 
     return render_template('auth/verify_reset_otp.html', user_id=user.id)
 
@@ -197,23 +197,22 @@ def forgot_password():
         data = request.get_json() if request.is_json else request.form
         email_or_phone = data.get('email_or_phone')
 
-        print(f"Received data: {email_or_phone}")  # Debug log
-
         if not email_or_phone:
             flash('Please enter your email or phone number.', 'danger')
-            return redirect(url_for('auth.forgot_password'))
+            return redirect(url_for('auth.verify_reset_otp'))
 
         # Check if the user exists in the database by email or phone
         user = User.query.filter((User.email == email_or_phone) | (User.phone == email_or_phone)).first()
-        print("User:",user)
         if user:
             # Generate OTP for password reset
             otp = generate_otp()
+            print("OTP:",otp)
             user.otp = otp
             user.otp_expiry = datetime.utcnow() + timedelta(minutes=10)  # Set OTP expiry time
             db.session.commit()
-            print(f"Generated OTP: {otp}")  # Debug log
-            
+
+            session['user_email'] = user.email
+            print(session['user_email'])
             # Send OTP to the email
             if send_otp(user.email, otp):  
                 flash('OTP sent to your email. Please verify to reset your password.', 'info')
@@ -241,7 +240,7 @@ def reset_password(user_id):
 
         if new_password != confirm_password:
             return jsonify({"error": "Passwords do not match."}), 400
-        
+
         hashed_password = generate_password_hash(new_password)
         user.password = hashed_password
         user.otp = None
@@ -249,21 +248,57 @@ def reset_password(user_id):
 
         return jsonify({"message": "Password reset successfully."}), 200
 
-
     return render_template('auth/reset_password.html', user_id=user_id)
 
+# Resend OTP Route
+@auth_bp.route('/resend_otp', methods=['GET','POST'])
+def resend_otp():
+    email = session.get('user_email')  # Retrieve email from session
+    print(email)
+    if not email:
+        flash('Session expired. Please login again.', 'danger')
+        return jsonify({"error": "Session expired. Please login again."}), 401
 
-def dashboard():
-    pass
+    # Check if the user exists
+    user = User.query.filter_by(email=email).first() or Doctor.query.filter_by(email_id=email).first()
+    if not user:
+        flash('User not found.', 'danger')
+        return jsonify({"error": "User not found."}), 404
+
+    # Generate new OTP
+    otp = generate_otp()
+    print(f"Resending OTP: {otp}")  # For debugging purposes
+
+    # Update OTP and expiry if needed
+    if hasattr(user, 'otp'):  # Ensure compatibility with the Doctor model
+        user.otp = otp
+        user.otp_expiry = datetime.utcnow() + timedelta(minutes=10)
+        db.session.commit()
+
+    # Send OTP to the user's email
+    if send_otp(email, otp):
+        flash('OTP resent to your email.', 'info')
+        return jsonify({"message": "OTP resent to your email."}), 200
+    # else:
+    #     flash('Error resending OTP. Please try again.', 'danger')
+    #     return jsonify({"error": "Error resending OTP."}), 500
+    return render_template('auth/resend_otp.html')
+
 
 
 # Admin Dashboard Route
 @auth_bp.route('/dashboard')
-@role_required('admin')
 def admin_dashboard():
-    # Pass the URL for the view_doctor route to the template
+    doctor_count = Doctor.query.count()
+    patient_count = PatientRecord.query.count()
+    appointment_count = Appointment.query.filter_by(status='Pending').count()
+    
+    
     view_doctor_url = url_for('doctor_bp.view_doctors')  # Adjust 'doctor_bp.view_doctor' to match your blueprint and function name
-    return render_template('admin/admin_dashboard.html', view_doctor_url=view_doctor_url)
+    return render_template('admin/admin_dashboard.html',
+                         doctor_count=doctor_count,
+                         patient_count=patient_count,
+                         appointment_count=appointment_count, view_doctor_url=view_doctor_url)
 
 
 # Doctor Dashboard Route
@@ -285,9 +320,17 @@ def doctor_dashboard():
     else:
         print("No patients found in the database.")
 
-    return render_template('auth/doctor_dashboard.html',doctor_name=doctor.name)
+    return render_template('auth/doctor_dashboard.html', doctor_name=doctor.name)
 
 # Patient Dashboard Route
 @auth_bp.route('/patient/dashboard')
 def patient_dashboard():
-    return render_template('auth/patient_dashboard.html')
+    patient_email = session['email']
+    patient = PatientRecord.query.filter_by(email_id=patient_email).first()
+
+    if patient:
+        print(f"Patient Name: {patient.name}")
+    else:
+        print("No patient found with the provided email.")
+
+    return render_template('auth/patient_dashboard.html',patient_name=patient.name)

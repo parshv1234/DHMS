@@ -76,6 +76,18 @@ def generate_qr_code(data, file_path, logo_path=None, name=None, contact_number=
     new_img.save(file_path)
     print(f"QR code saved as {file_path}")
 
+def generate_aqr_code(data, file_path, logo_path=None):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_H,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image(fill="darkblue", back_color="white").convert("RGBA")
+    img.save(file_path)
+
 # Register patient route
 @patient_bp.route('/register_patient', methods=['GET', 'POST'])
 def register_patient():
@@ -153,69 +165,66 @@ def register_patient():
 def create_appointment():
     if request.method == 'POST':
         data = request.form
-
-        try:
-            # Get patient email from session
-            patient_email = session.get("email")
-            patient = PatientRecord.query.filter_by(email_id=patient_email).first()
-            print(patient)
-            print(patient_email)
+        # Get patient email from session
+        patient_email = session.get("email")
+        patient = PatientRecord.query.filter_by(email_id=patient_email).first()
+        try:   
             if not patient:
                 flash('Patient not found.', 'error')
                 return redirect(url_for('patient.create_appointment'))
-
+           
+            # Extract form data
             doctor_id = data.get('doctor_id')
             appointment_date = data.get('appointment_date')
             appointment_time = data.get('appointment_time')
             reason = data.get('reason')
-            print(doctor_id)
-            print(appointment_date)
-            print(appointment_time)
-            print(reason)
+
             # Validate input
             if not all([doctor_id, appointment_date, appointment_time, reason]):
                 flash('All fields are required.', 'error')
                 return redirect(url_for('patient.create_appointment'))
-
-            # Insert the appointment into the database
-            query = """
-                INSERT INTO appointment_record (
-                    patient_id, doctor_id, appointment_date, appointment_time, reason
-                ) VALUES (:patient_id, :doctor_id, :appointment_date, :appointment_time, :reason)
-            """
-
-            insert_query = text(query)
-            params = {
-            'patient_id': patient.id,
-            'doctor_id': doctor_id,
-            'appointment_date': appointment_date,
-            'appointment_time': appointment_time,
-            'reason': reason
-            
-            }
-
-            # Debugging: Log the raw query and parameters
-            print("Raw Query Template:\n", query)
-            print("Parameters to Substitute:\n", params)
-
-            # Execute the query
-            db.session.execute(insert_query, params)
-
+                
+            # Create a new appointment
+            appointment_id = str(uuid.uuid4())
+            new_appointment = Appointment(
+                id=appointment_id,
+                patient_id=patient.id,
+                doctor_id=doctor_id,
+                appointment_date=appointment_date,
+                appointment_time=appointment_time,
+                reason=reason
+            )
+            db.session.add(new_appointment)
             db.session.commit()
-            print("Database updated successfully.")
-            flash('Appointment created successfully!', 'success')
+
+            # Generate QR code for the appointment
+            qr_code_path = f"app/static/qrcodes/appointment_{appointment_id}.png"
+            print(f"Appointment ID: {appointment_id}\nPatient Name: {patient.name}\nDoctor ID: {doctor_id}\nDate: {appointment_date}\nTime: {appointment_time}\nReason: {reason}")
+
+            qr_data = f"Appointment ID: {appointment_id}\nPatient Name: {patient.name}\nDoctor ID: {doctor_id}\nDate: {appointment_date}\nTime: {appointment_time}\nReason: {reason}"
+            generate_aqr_code(qr_data, qr_code_path)
+
+            # Send the QR code via email
+            send_email_with_qr(patient.email_id, qr_code_path)
+
+            flash('Appointment created successfully! The QR code has been sent to your email.', 'success')
             return redirect(url_for('auth.patient_dashboard'))
-        except Exception as e:
+            
+                
+        except SQLAlchemyError as e:
             db.session.rollback()
-            print("Rollback")
-            print(f"Transaction failed: {e}")
-            flash(f'Error creating appointment: {str(e)}', 'error')
+            flash(f'An error occurred: {str(e)}', 'error')
             return redirect(url_for('patient.create_appointment'))
-
-    # Fetch list of doctors for selection in the form
+        
+    # Fetch doctors for the dropdown
     doctors = db.session.execute(text("SELECT id, name FROM doctor_record")).fetchall()
-
-    return render_template('patients/create_appointment.html', doctors=doctors)
+    # patients= db.session.execute(
+    #     text("SELECT name FROM users WHERE email = :email_id_"),
+    #     {'email_id_': patient_email}
+    # ).fetchall()
+    patient_email = session.get("email")
+    patient_name_ = db.session.query(PatientRecord.name).filter_by(email_id=patient_email).first()
+    return render_template('patients/create_appointment.html', doctors=doctors, patient_name=patient_name_[0])
 
 @patient_bp.route('/view_appointments', methods=['GET'])
 def view_appointments():
@@ -227,11 +236,15 @@ def view_appointments():
         if not patient:
             flash('Patient not found.', 'error')
             return redirect(url_for('patient.view_appointments'))
+        if patient:
+            print(f"Patient Name: {patient.name}")
+            
+            # Fetch appointments for the logged-in patient
+            appointments = Appointment.query.filter_by(patient_id=patient.id).order_by(Appointment.appointment_date.desc()).all()
 
-        # Fetch appointments for the logged-in patient
-        appointments = Appointment.query.filter_by(patient_id=patient.id).order_by(Appointment.appointment_date.desc()).all()
-
-        return render_template('patients/view_appointments.html', appointments=appointments, today=datetime.today())
+            return render_template('patients/view_appointments.html', appointments=appointments, today=datetime.today(),patient_name=patient.name)
+        else:
+            print("No patient found with the provided email.")
     except Exception as e:
         print(f"Error retrieving appointments: {str(e)}", 'error')
         return redirect(url_for('patient.view_appointments'))

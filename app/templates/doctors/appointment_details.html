@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Details</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f3f4f6, #d6e4e5);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        /* Appointment Info */
+        .appointment-info {
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .appointment-info strong {
+            color: #333;
+        }
+
+        .appointment-info p {
+            font-size: 16px;
+            color: #777;
+            margin: 8px 0;
+        }
+
+        /* Charges Section */
+        .charges-section {
+            background-color: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .charges-section label {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .charges-section input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: #333;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        /* Link Button */
+        a {
+            text-decoration: none;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 90%;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .appointment-info {
+                padding: 15px;
+            }
+
+            .charges-section {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Appointment Details</h1>
+        
+        <div class="appointment-info">
+            <p><strong>Appointment ID:</strong> {{ appointment.id }}</p>
+            <p><strong>Patient Name:</strong> {{ appointment.patient.name }}</p>
+            <p><strong>Doctor Name:</strong> {{ appointment.doctor.name }}</p>
+            <p><strong>Scheduled Date:</strong> {{ appointment.date }}</p>
+            <p><strong>Time:</strong> {{ appointment.time }}</p>
+        </div>
+
+        <div class="charges-section">
+            <!-- <label for="charges">Charges (in Rup):</label> -->
+            <form method="POST" action="{{ url_for('doctor_bp.scan_appointment') }}">
+                <input type="hidden" name="appointment_id" value="{{ appointment.id }}">
+                <input type="text" id="charges" name="charges" placeholder="Enter charges amount" required>
+                <button type="submit">Save Charges</button>
+            </form>            
+        </div>
+
+        <div class="action-buttons">
+            <a href="{{ url_for('auth.doctor_dashboard') }}" onclick="return confirmBack()">Back to Dashboard</a>
+            <a href="{{ url_for('doctor_bp.scan_qr_page') }}" onclick="return confirmScan()">Scan Another QR Code</a>
+            <a href="{{ url_for('payment_bp.create_payment') }}">Go To Payment</a>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript function for confirming the QR code scan action
+        function confirmScan() {
+            return confirm("Are you sure you want to scan another QR code?");
+        }
+        function confirmBack() {
+            return confirm("Are you sure you want to go to the Dashboard?");
+        }
+    </script>
+</body>
+</html>

@@ -92,9 +92,9 @@
 </head>
 <body>
     <header class="header">
-        <h1>Welcome, {{ user_role }}!</h1>
+        <h1>Welcome, {{ patient_name }}!</h1>
         <nav class="nav">
-            <a href="{{ url_for('auth.logout') }}">Logout</a>
+            <a href="{{ url_for('doctor_bp.logout') }}">Logout</a>
         </nav>
     </header>
 

@@ -57,6 +57,34 @@
         .btn:hover {
             background-color: #1f3a4c;
         }
+
+        /* Responsive design for mobile devices */
+        @media screen and (max-width: 768px) {
+            table, th, td {
+                display: block;
+                width: 100%;
+            }
+            th, td {
+                text-align: right;
+            }
+            th {
+                background-color: #3f5b76;
+                color: white;
+                padding: 10px;
+            }
+            td {
+                padding: 8px 10px;
+                border: none;
+                position: relative;
+            }
+            td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                top: 10px;
+                font-weight: bold;
+            }
+        }
     </style>
 </head>
 <body>
@@ -76,11 +104,11 @@
                 <tbody>
                     {% for appointment in appointments %}
                         <tr>
-                            <td>{{ appointment.id }}</td>
-                            <td>{{ patient_name }}</td>
-                            <td>{{ appointment.appointment_date.strftime('%Y-%m-%d') }}</td>
-                            <td>{{ appointment.appointment_time.strftime('%H:%M:%S') }}</td>
-                            <td>{{ appointment.status }}</td>
+                            <td data-label="Appointment ID">{{ appointment.id }}</td>
+                            <td data-label="Patient Name">{{ appointment.patient_name }}</td>
+                            <td data-label="Appointment Date">{{ appointment.appointment_date.strftime('%Y-%m-%d') }}</td>
+                            <td data-label="Appointment Time">{{ appointment.appointment_time.strftime('%H:%M:%S') }}</td>
+                            <td data-label="Status">{{ appointment.status }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -90,6 +118,7 @@
         {% endif %}
 
         <a href="{{ url_for('auth.doctor_dashboard') }}" class="btn">Back to Dashboard</a>
+        <a href="{{ url_for('doctor_bp.scan_qr_page') }}" class="btn">Scan QR</a>
     </div>
 </body>
 </html>

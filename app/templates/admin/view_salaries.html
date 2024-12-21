@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Salaries</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+        .salary-section {
+            margin-top: 30px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .salary-section h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        .admin-salary {
+            margin-top: 30px;
+            font-size: 18px;
+            padding: 10px;
+            background-color: #eaf0e3;
+            border-radius: 6px;
+        }
+        .salary-button {
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+        }
+        .salary-button button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .salary-button button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin and Doctor Salaries</h1>
+
+        <!-- Doctor Salary Section -->
+        <div class="salary-section">
+            <h2>Doctors' Salaries</h2>
+            <table>
+                <tr>
+                    <th>Doctor Name</th>
+                    <th>Salary</th>
+                </tr>
+                {% for doctor in doctor_salaries %}
+                    <tr>
+                        <td>{{ doctor.name }}</td>
+                        <td>&#8377;{{ doctor.salary|round(2) }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- Admin Salary Section -->
+        <div class="admin-salary">
+            <h3>Admin's Total Salary: &#8377;{{ admin_salary|round(2) }}</h3>
+        </div>
+
+        <div class="salary-button">
+            <button onclick="window.location.reload();">Refresh</button>
+        </div>
+        <br>
+        <div class="refresh-button">
+            <a href="{{ url_for('auth.admin_dashboard') }}" class="salary-button">
+                <button type="button" class="btn">Back To Dashboard</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Add any custom JavaScript here if necessary
+        // For example, you could make AJAX calls if you want to update the salary without refreshing the page
+    </script>
+</body>
+</html>

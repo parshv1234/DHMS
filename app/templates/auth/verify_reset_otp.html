@@ -98,8 +98,8 @@
                 <div class="form-group">
                     <button type="submit" class="btn">Verify OTP</button>
                 </div>
-                <p class="resend-link">Didn't receive the OTP? <a href="/auth/resend-otp">Resend OTP</a></p>
-                <p class="resend-link"><a href="/login">Back to Login</a></p>
+                <p class="resend-link">Didn't receive the OTP? <a href="{{ url_for('auth.resend_otp') }}">Resend OTP</a></p>
+                <p class="resend-link"><a href="{{ url_for('auth.login') }}">Back to Login</a></p>
             </form>
         </div>
     </div>

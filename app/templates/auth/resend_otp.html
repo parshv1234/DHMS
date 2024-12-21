@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resend OTP</title>
     <style>
+        /* Same CSS as before */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -97,6 +98,7 @@
                 <label for="email">Email Address</label>
                 <input type="email" id="email" name="email" required placeholder="Enter your email" />
             </div>
+            <input type="hidden" id="redirect_url" value="/verify_login_otp" /> <!-- Hidden redirect URL -->
             <button type="submit" id="resendButton">Resend OTP</button>
         </form>
 
@@ -111,7 +113,8 @@
         let resendButton = document.getElementById('resendButton');
         let alertMessage = document.getElementById('alertMessage');
         let resendForm = document.getElementById('resendOtpForm');
-        
+        let redirectUrl = document.getElementById('redirect_url').value;
+
         // Function to handle OTP resend button
         function handleResendOtp(event) {
             event.preventDefault();
@@ -126,16 +129,37 @@
             alertMessage.textContent = 'Resending OTP...';
             alertMessage.style.display = 'block';
 
-            // Simulate an OTP resend process (use AJAX or backend API call in real scenario)
-            setTimeout(() => {
-                alertMessage.textContent = 'OTP has been resent successfully!';
-                alertMessage.classList.add('success');
-                alertMessage.style.display = 'block';
+            // Send AJAX request to backend for OTP resend
+            fetch('/resend-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alertMessage.textContent = 'OTP has been resent successfully!';
+                    alertMessage.classList.add('success');
+                    alertMessage.style.display = 'block';
 
-                // Re-enable the button after 5 seconds and start the timer
+                    // Redirect to the OTP verification page after a short delay
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 2000);
+                } else if (data.error) {
+                    alertMessage.textContent = data.error;
+                    alertMessage.style.display = 'block';
+                }
                 resendButton.disabled = false;
-                startTimer();
-            }, 5000);  // Simulate a 2 second delay for OTP resend
+            })
+            .catch(error => {
+                console.error('Error resending OTP:', error);
+                alertMessage.textContent = 'An error occurred. Please try again.';
+                alertMessage.style.display = 'block';
+                resendButton.disabled = false;
+            });
         }
 
         // Timer countdown for re-enabling resend button

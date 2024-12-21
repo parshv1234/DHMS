@@ -123,10 +123,10 @@
         <a href="{{ url_for('admin.view_patients') }}" class="{% if request.endpoint == 'admin.view_patients' %}active{% endif %}">
             <i class="fas fa-procedures me-2"></i> Patients
         </a>
-        <a href="{{ url_for('admin.view_appointments') }}" class="{% if request.endpoint == 'admin.view_appointments' %}active{% endif %}">
+        <a href="{{ url_for('doctor_bp.view_appointments') }}" class="{% if request.endpoint == 'admin.view_appointments' %}active{% endif %}">
             <i class="fas fa-calendar-alt me-2"></i> Appointments
         </a>
-        <a href="{{ url_for('auth.logout') }}">
+        <a href="{{ url_for('doctor_bp.logout') }}">
             <i class="fas fa-sign-out-alt me-2"></i> Logout
         </a>
     </div>
@@ -142,9 +142,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
-                        </li>
+                        
                     </ul>
                 </div>
             </div>

@@ -148,6 +148,7 @@ class Appointment(db.Model):
     notes = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    charges = db.Column(db.Float, nullable=True)  # New column to store charges
 
     # Relationships
     patient = db.relationship('PatientRecord', backref='appointments')
@@ -177,3 +178,22 @@ class MedicalTest(db.Model):
 
     def __repr__(self):
         return f"<MedicalTest {self.id}, Patient: {self.patient_id}, Test: {self.test_name}>"
+    
+class Payment(db.Model):
+    __tablename__ = 'payments'
+    
+    id = db.Column(db.String(36), primary_key=True)  # Payment ID from Razorpay/Stripe
+    patient_id = db.Column(db.String, db.ForeignKey('patient_record.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False)
+    doctor_id = db.Column(db.String, db.ForeignKey('doctor_record.id', onupdate="CASCADE", ondelete="RESTRICT"), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    admin_share = db.Column(db.Float, nullable=False)
+    doctor_share = db.Column(db.Float, nullable=False)
+    payment_status = db.Column(db.String(20), default='Pending')  # E.g., 'Completed', 'Failed'
+    payment_date = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # Relationships
+    patient = db.relationship('PatientRecord', backref='payments')
+    doctor = db.relationship('Doctor', backref='payments')
+
+    def __repr__(self):
+        return f"<Payment {self.id}, Patient: {self.patient_id}, Doctor: {self.doctor_id}>"
