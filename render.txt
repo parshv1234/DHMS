@@ -1,0 +1,8 @@
+gunicorn "app.__init__:create_app()" --bind 0.0.0.0:8000
+
+RAZORPAY_KEY_ID=rzp_test_YxbUJcA3rAP8a0
+RAZORPAY_KEY_SECRET=KDHMgfImskLyj2X4G9z4sxBp
+MAIL_PASSWORD=fmqs jhlk njnt ienw
+default_secret_key=parshv@123
+FLASK_ENV=development
+DATABASE_URL=postgresql://dhms_user:02qkY5Vyo6ctkvf9QgdrC1J8QDQPKC6z@dpg-ctk4q2lds78s73etajug-a/dhms_db
