@@ -6,3 +6,12 @@ MAIL_PASSWORD=fmqs jhlk njnt ienw
 default_secret_key=parshv@123
 FLASK_ENV=development
 DATABASE_URL=postgresql://dhms_user:02qkY5Vyo6ctkvf9QgdrC1J8QDQPKC6z@dpg-ctk4q2lds78s73etajug-a/dhms_db
+
+git add .
+git status
+git commit -m "final"
+git branch -M main   
+git push -u origin main
+
+
+pip freeze > requirements.txt

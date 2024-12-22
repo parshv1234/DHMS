@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: DHMS Web Service
+    env: python
+    plan: free  # Change to your desired plan
+    buildCommand: |
+      apt-get update && apt-get install -y libzbar0  # Install zbar
+      pip install -r requirements.txt               # Install dependencies
+    startCommand: gunicorn "app.__init__:create_app()" --bind 0.0.0.0:8000
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://dhms_user:yourpassword@dpg-ctk4q2lds78s73etajug-a/dhms_db
+      - key: RAZORPAY_KEY_ID
+        value: rzp_test_YxbUJcA3rAP8a0
+      - key: RAZORPAY_KEY_SECRET
+        value: KDHMgfImskLyj2X4G9z4sxBp
+      - key: MAIL_PASSWORD
+        value: fmqs jhlk njnt ienw
+      - key: default_secret_key
+        value: parshv@123
+      - key: FLASK_ENV
+        value: development
