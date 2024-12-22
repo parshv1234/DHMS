@@ -23,6 +23,9 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')  # Use a default if not provided
+    # Debug SQLAlchemy instance
+    print(f"Database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
+    print(f"App is registered with DB: {db}")
 
     # Flask-Mail configuration
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -40,6 +43,7 @@ def create_app():
 
     # Initialize extensions
     db.init_app(app)
+    print("SQLAlchemy initialized successfully.")
     migrate = Migrate(app, db)
     mail.init_app(app)
     # login_manager.init_ap(app)
