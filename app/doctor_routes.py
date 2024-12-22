@@ -11,7 +11,8 @@ import uuid
 from app.auth_routes import auth_bp
 from PIL import Image
 import io
-from pyzxing import BarCodeReader
+# from pyzxing import BarCodeReader
+from pyzbar.pyzbar import decode
 
 # Define the blueprint for doctor-related routes
 doctor_bp = Blueprint('doctor_bp', __name__, template_folder='templates/doctors')
@@ -310,24 +311,17 @@ def scan_appointment():
                 file.save(temp_path)
                 print(f"File saved temporarily at: {temp_path}")
 
-                # Load the image and decode the QR code
-                reader = BarCodeReader()
-                qr_code_data = reader.decode(temp_path)
+                # Load the image and decode the QR code using pyzbar
+                image = Image.open(temp_path)
+                qr_code_data = decode(image)
 
                 if not qr_code_data:
                     flash('Invalid or unreadable QR code.', 'danger')
                     print("QR code not readable.")
                     return redirect(url_for('doctor_bp.scan_qr_page'))
 
-                first_qr_code = qr_code_data[0]
-                parsed_data = first_qr_code.get('parsed') if isinstance(first_qr_code, dict) else None
-
-                if not parsed_data:
-                    flash('No valid data found in QR code.', 'danger')
-                    print("No valid data found in QR code.")
-                    return redirect(url_for('doctor_bp.scan_qr_page'))
-
-                parsed_data = parsed_data.decode('utf-8').strip()
+                # Extract the data from the QR code
+                parsed_data = qr_code_data[0].data.decode('utf-8').strip()
                 print(f"Parsed data from QR code: {parsed_data}")
                 lines = parsed_data.split('\n')
                 appointment_id = lines[0].split(': ')[1]
@@ -387,6 +381,7 @@ def scan_appointment():
     # If no charges are provided, show the appointment details page again
     flash('Unexpected error occurred. Please try again.', 'danger')
     return redirect(url_for('doctor_bp.scan_qr_page'))
+
 
 
 
