@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_required, current_user
-from app import db
+from app.__init__ import db
 from app.models import Department, Doctor, PatientRecord, Appointment, Payment
 from utils.rbac import admin_required
 import uuid

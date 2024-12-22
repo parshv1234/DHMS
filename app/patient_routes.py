@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, Flask, jsonify, session
-from app import db, mail
+from app.__init__ import db, mail
 from app.models import PatientRecord, Appointment  # Import the model for patient record
 from flask_mail import Message
 import logging

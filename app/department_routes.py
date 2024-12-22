@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from app.models import Department, Doctor
-from app import db
+from app.__init__ import db
 from app.decorators import role_required
 import uuid
 from datetime import datetime

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, render_template, current_app
-from app import db
+from app.__init__ import db
 from app.models import Payment, Appointment
 import razorpay
 import logging

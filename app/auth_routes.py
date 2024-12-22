@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, redirect, url_for, flash, session, jsonify
-from app import db
+from app.__init__ import db
 from app.models import User, Doctor, PatientRecord, Appointment
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils.otp import generate_otp, send_otp, verify_otp  # Corrected import for OTP sending
