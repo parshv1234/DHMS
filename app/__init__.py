@@ -42,13 +42,13 @@ def create_app():
     db.init_app(app)
     migrate = Migrate(app, db)
     mail.init_app(app)
-    login_manager.init_app(app)
+    # login_manager.init_ap(app)
 
-    # Define the user_loader function
-    @login_manager.user_loader
-    def load_user(id):
-        from .models import Doctor
-        return Doctor.query.get(id)  # Assuming the user model is 'Doctor' with primary key 'id'
+    # # Define the user_loader function
+    # @login_manager.user_loader
+    # def load_user(id):
+    #     from .models import Doctor
+    #     return Doctor.query.get(id)  # Assuming the user model is 'Doctor' with primary key 'id'
 
     # Register blueprints
     from app.doctor_routes import doctor_bp
