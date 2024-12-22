@@ -20,7 +20,7 @@ def create_app():
     app.config['DEBUG'] = True
     logging.basicConfig(level=logging.DEBUG)
     # Database and app configuration
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://dhms_user:dhms_05@localhost/dhms_db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL') or 'postgresql://dhms_user:dhms_05@localhost/dhms_db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')  # Use a default if not provided
 
