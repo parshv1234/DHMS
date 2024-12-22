@@ -1,0 +1,109 @@
+.
+├── UsersparshvDocumentspg_schema.sql
+├── app
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-312.pyc
+│   │   ├── admin_routes.cpython-312.pyc
+│   │   ├── auth_routes.cpython-312.pyc
+│   │   ├── decorators.cpython-312.pyc
+│   │   ├── department_routes.cpython-312.pyc
+│   │   ├── doctor_routes.cpython-312.pyc
+│   │   ├── models.cpython-312.pyc
+│   │   ├── patient_routes.cpython-312.pyc
+│   │   ├── payment_routes.cpython-312.pyc
+│   │   ├── qr_code_generator.cpython-312.pyc
+│   │   └── routes.cpython-312.pyc
+│   ├── admin_routes.py
+│   ├── auth_routes.py
+│   ├── decorators.py
+│   ├── department_routes.py
+│   ├── doctor_routes.py
+│   ├── models.py
+│   ├── patient_routes.py
+│   ├── payment_routes.py
+│   ├── static
+│   │   ├── logo.png
+│   │   ├── logo1.jpg
+│   │   ├── logo2.png
+│   │   ├── qrcodes
+│   │   └── uploads
+│   └── templates
+│       ├── admin
+│       ├── auth
+│       ├── doctors
+│       ├── index.html
+│       ├── patients
+│       └── scan_patient_qr.html
+├── app.py
+├── ashs.txt
+├── database
+│   └── db_connection.py
+├── dfd_diagram
+├── diagrams
+│   ├── activitydiagram.png
+│   ├── apiarchitecture.png
+│   ├── dataflowdiagram.png
+│   ├── deploymentdiagram.png
+│   ├── dfd_diagram.png
+│   ├── er_diagram.png
+│   ├── netwrokdiagram.png
+│   ├── securityarchitecture.png
+│   ├── sequencediagram.png
+│   ├── systemarchitecture.png
+│   ├── timeline.png
+│   ├── uml(usecase).png
+│   └── workflow.png
+├── email_log.txt
+├── er_diagram.png
+├── file_structure.txt
+├── instance
+│   └── config.py
+├── migrations
+│   ├── README
+│   ├── __pycache__
+│   │   └── env.cpython-312.pyc
+│   ├── alembic.ini
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+│       ├── 0bd1de1a4627_initial_migration.py
+│       └── __pycache__
+├── requirements.txt
+├── test.py
+├── utils
+│   ├── __pycache__
+│   │   ├── otp.cpython-312.pyc
+│   │   └── rbac.cpython-312.pyc
+│   ├── otp.py
+│   ├── rbac.py
+│   └── security.py
+└── venv
+    ├── bin
+    │   ├── Activate.ps1
+    │   ├── activate
+    │   ├── activate.csh
+    │   ├── activate.fish
+    │   ├── alembic
+    │   ├── diagrams
+    │   ├── dotenv
+    │   ├── eralchemy
+    │   ├── f2py
+    │   ├── flask
+    │   ├── mako-render
+    │   ├── normalizer
+    │   ├── pip
+    │   ├── pip3
+    │   ├── pip3.12
+    │   ├── python -> python3.12
+    │   ├── python3 -> python3.12
+    │   ├── python3.12 -> /Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12
+    │   ├── qr
+    │   └── segno
+    ├── include
+    │   └── python3.12
+    ├── lib
+    │   └── python3.12
+    └── pyvenv.cfg
+
+26 directories, 81 files

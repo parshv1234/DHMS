@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_login import LoginManager
@@ -65,4 +65,9 @@ def create_app():
     # app.register_blueprint(department, url_prefix='/admin/departments')
     app.register_blueprint(payment_bp, url_prefix='/payments')
 
+    @app.route('/', methods=['GET'])
+    def Home():
+        print('HI')
+        return render_template('index.html')
+    
     return app
