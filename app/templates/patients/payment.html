@@ -239,144 +239,138 @@
             // If canceled, do nothing (return false)
             return false;
         }
-
+        // Utility function to handle errors
+        function handleError(message, error = null) {
+            console.error(message, error);
+            alert(message);
+        }
+    
         // Create Payment
         document.getElementById('createPaymentBtn').addEventListener('click', async () => {
-            const patientId = document.getElementById('patient_id').value;
-            const doctorId = document.getElementById('doctor_id').value;
-
+            const patientId = document.getElementById('patient_id').value.trim();
+            const doctorId = document.getElementById('doctor_id').value.trim();
+    
             if (!patientId || !doctorId) {
-                alert('Patient ID and Doctor ID are required!');
+                handleError('Patient ID and Doctor ID are required!');
                 return;
             }
-
+    
             try {
-                // Fetch the amount from the server based on patient_id and doctor_id
+                // Fetch amount based on patient and doctor
                 const response = await fetch(`/payments/get_amount?patient_id=${patientId}&doctor_id=${doctorId}`);
-                const data = await response.json();
-
-                if (!response.ok) {
-                    console.error('Error fetching amount:', data);
-                    alert(data.error || 'Error fetching payment amount');
-                    return;
-                }
-
-                const amount = data.amount;
-
+                if (!response.ok) throw new Error('Error fetching payment amount.');
+                const { amount } = await response.json();
+    
                 if (!amount) {
-                    alert('No charges found for the selected patient and doctor.');
+                    handleError('No charges found for the selected patient and doctor.');
                     return;
                 }
-
+    
                 // Create payment
                 const paymentResponse = await fetch('/payments/create_payment', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ patient_id: patientId, doctor_id: doctorId, amount: amount })
+                    body: JSON.stringify({ patient_id: patientId, doctor_id: doctorId, amount })
                 });
-
+    
+                if (!paymentResponse.ok) throw new Error('Error creating payment.');
                 const paymentData = await paymentResponse.json();
-                if (paymentResponse.ok) {
-                    document.getElementById('qrCodeSection').style.display = 'block';
-                    document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?data=${paymentData.payment_url}`;
-                    document.getElementById('paymentLink').href = paymentData.payment_url;
-                } else {
-                    console.error('Payment creation error:', paymentData);
-                    alert(paymentData.error || 'Error creating payment');
-                }
+    
+                // Show QR code
+                document.getElementById('qrCodeSection').style.display = 'block';
+                document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?data=${paymentData.payment_url}`;
+                document.getElementById('paymentLink').href = paymentData.payment_url;
+    
             } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to create payment. Please try again later.');
+                handleError('Failed to create payment. Please try again later.', error);
             }
         });
-
-        let razorpayKey = null;
-
-        // Fetch Razorpay key from the server
-        fetch('/payments/get_razorpay_key')
-            .then(response => response.json())
-            .then(data => {
-                razorpayKey = data.razorpay_key;
-            })
-            .catch(error => {
-                console.error('Error fetching Razorpay key:', error);
-                alert('Failed to load payment configuration.');
-            });
-
+    
         // Razorpay Checkout
-        function initiatePayment() {
+        async function initiatePayment() {
             const payment_url = document.getElementById('paymentLink').href;
-            const order_id = payment_url.split('/l/')[1]; // Extract the order ID from the URL
-
-            const options = {
-                "key": razorpayKey,  // Use the Razorpay key obtained dynamically
-                "order_id": order_id,
-                "handler": function (response) {
-                    console.log("Payment successful:", response);
-                    fetch('/payments/payment_callback', {
-                        method: 'POST',
-                        body: JSON.stringify(response),
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    }).then(res => res.json()).then(data => {
-                        alert('Payment successful! Your payment status has been updated.');
-                    }).catch(err => {
-                        alert('Payment successful, but there was an error updating the status.');
-                    });
-                },
-                "prefill": {
-                    "name": "Patient",
-                    "email": "patient@example.com"
-                }
-            };
-            const rzp1 = new Razorpay(options);
-            rzp1.open();  // Open the Razorpay checkout form directly
-        }
-
-        // Fetch Payment History
-        document.getElementById('fetchPaymentHistoryBtn').addEventListener('click', async () => {
-            const patientId = document.getElementById('patient_id_history').value;
-
-            if (!patientId) {
-                alert('Please enter a valid Patient ID!');
+            const order_id = payment_url.split('/l/')[1]; // Extract the order ID
+    
+            if (!order_id) {
+                handleError('Invalid payment link. Please try again.');
                 return;
             }
-
+    
             try {
-                // Fetch payment history from the server
-                const response = await fetch(`/payments/get_payment_history?patient_id=${patientId}`);
-                const data = await response.json();
-
-                if (response.ok) {
-                    const paymentHistory = data.payment_history;
-                    const historyTable = document.getElementById('paymentHistory');
-                    historyTable.innerHTML = '';  // Clear existing table rows
-
-                    if (paymentHistory.length > 0) {
-                        paymentHistory.forEach(payment => {
-                            const statusClass = payment.status.toLowerCase();
-                            const row = `
-                                <tr>
-                                    <td>${payment.payment_id}</td>
-                                    <td>${payment.doctor_id}</td>
-                                    <td>${payment.amount}</td>
-                                    <td><span class="status ${statusClass}">${payment.status}</span></td>
-                                    <td>${payment.date}</td>
-                                </tr>
-                            `;
-                            historyTable.insertAdjacentHTML('beforeend', row);
-                        });
-                    } else {
-                        historyTable.innerHTML = '<tr><td colspan="5">No payment history found.</td></tr>';
+                const response = await fetch('/payments/get_razorpay_key');
+                if (!response.ok) throw new Error('Failed to fetch Razorpay key.');
+                const { razorpay_key } = await response.json();
+    
+                const options = {
+                    key: razorpay_key,
+                    order_id: order_id,
+                    handler: function (response) {
+                        fetch('/payments/payment_callback', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(response)
+                        }).then(res => {
+                            if (res.ok) {
+                                alert('Payment successful! Your payment status has been updated.');
+                                window.location.reload();
+                            } else {
+                                handleError('Payment was successful, but status update failed.');
+                            }
+                        }).catch(err => handleError('Error updating payment status.', err));
+                    },
+                    prefill: {
+                        name: "Patient",
+                        email: "patient@example.com"
+                    },
+                    theme: {
+                        color: "#007bff"
                     }
-                } else {
-                    console.error('Error fetching payment history:', data);
-                    alert('Error fetching payment history.');
-                }
+                };
+    
+                const rzp = new Razorpay(options);
+                rzp.open();
+    
             } catch (error) {
-                console.error('Error:', error);
-                alert('Failed to fetch payment history. Please try again later.');
+                handleError('Error initiating payment. Please try again later.', error);
+            }
+        }
+    
+        // Fetch Payment History
+        document.getElementById('fetchPaymentHistoryBtn').addEventListener('click', async () => {
+            const patientId = document.getElementById('patient_id_history').value.trim();
+    
+            if (!patientId) {
+                handleError('Please enter a valid Patient ID!');
+                return;
+            }
+    
+            try {
+                const response = await fetch(`/payments/get_payment_history?patient_id=${patientId}`);
+                if (!response.ok) throw new Error('Error fetching payment history.');
+                const { payment_history } = await response.json();
+    
+                const historyTable = document.getElementById('paymentHistory');
+                historyTable.innerHTML = ''; // Clear existing rows
+    
+                if (payment_history.length > 0) {
+                    payment_history.forEach(payment => {
+                        const statusClass = payment.status.toLowerCase();
+                        const row = `
+                            <tr>
+                                <td>${payment.payment_id}</td>
+                                <td>${payment.doctor_id}</td>
+                                <td>${payment.amount}</td>
+                                <td><span class="status ${statusClass}">${payment.status}</span></td>
+                                <td>${payment.date}</td>
+                            </tr>`;
+                        historyTable.insertAdjacentHTML('beforeend', row);
+                    });
+                } else {
+                    historyTable.innerHTML = '<tr><td colspan="5">No payment history found.</td></tr>';
+                }
+    
+            } catch (error) {
+                handleError('Failed to fetch payment history. Please try again later.', error);
             }
         });
     </script>
