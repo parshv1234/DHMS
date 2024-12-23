@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y libzbar0
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 8000
 
 # Start the app
-CMD ["gunicorn", "--workers", "1", "--bind", "0.0.0.0:8000", "app.__init__:create_app()"]
+CMD ["gunicorn", "--workers", "3", "--bind", "0.0.0.0:8000", "--access-logfile", "-", "--error-logfile", "-", "app.__init__:create_app()"]
