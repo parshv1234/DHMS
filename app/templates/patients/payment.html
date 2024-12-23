@@ -288,90 +288,125 @@
     
         // Razorpay Checkout
         async function initiatePayment() {
-            const payment_url = document.getElementById('paymentLink').href;
-            const order_id = payment_url.split('/l/')[1]; // Extract the order ID
-    
+            const paymentLinkElement = document.getElementById('paymentLink');
+            if (!paymentLinkElement) {
+                handleError('Payment link not found.');
+                return;
+            }
+        
+            const payment_url = paymentLinkElement.href;
+            const order_id = payment_url.split('/l/')[1]; // Extract the order ID from the URL
+        
             if (!order_id) {
                 handleError('Invalid payment link. Please try again.');
                 return;
             }
-    
+        
             try {
-                const response = await fetch('/payments/get_razorpay_key');
-                if (!response.ok) throw new Error('Failed to fetch Razorpay key.');
-                const { razorpay_key } = await response.json();
-    
+                // Fetch Razorpay key
+                const keyResponse = await fetch('/payments/get_razorpay_key');
+                if (!keyResponse.ok) throw new Error('Failed to fetch Razorpay key.');
+        
+                const { razorpay_key } = await keyResponse.json();
+        
+                if (!razorpay_key) {
+                    throw new Error('Razorpay key is missing.');
+                }
+        
+                // Razorpay options
                 const options = {
-                    key: razorpay_key,
-                    order_id: order_id,
-                    handler: function (response) {
-                        fetch('/payments/payment_callback', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(response)
-                        }).then(res => {
-                            if (res.ok) {
-                                alert('Payment successful! Your payment status has been updated.');
-                                window.location.reload();
+                    "key": razorpay_key,
+                    "order_id": order_id,
+                    "handler": async function (response) {
+                        if (!response.razorpay_payment_id || !response.razorpay_order_id || !response.razorpay_signature) {
+                            alert('Payment successful, but critical data is missing.');
+                            console.error('Missing response parameters:', response);
+                            return;
+                        }
+        
+                        try {
+                            // Send payment callback to the server
+                            const callbackResponse = await fetch('/payments/payment_callback', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                body: new URLSearchParams({
+                                    'razorpay_payment_id': response.razorpay_payment_id,
+                                    'razorpay_order_id': response.razorpay_order_id,
+                                    'razorpay_signature': response.razorpay_signature
+                                })
+                            });
+        
+                            const callbackData = await callbackResponse.json();
+        
+                            if (callbackData.status === 'success') {
+                                alert('Payment successful and callback processed successfully!');
                             } else {
-                                handleError('Payment was successful, but status update failed.');
+                                alert('Payment successful, but there was an issue processing the callback.');
+                                console.error('Callback Response:', callbackData);
                             }
-                        }).catch(err => handleError('Error updating payment status.', err));
+                        } catch (err) {
+                            console.error('Error sending payment callback:', err);
+                            alert('Payment successful, but callback processing failed.');
+                        }
                     },
-                    prefill: {
-                        name: "Patient",
-                        email: "patient@example.com"
-                    },
-                    theme: {
-                        color: "#007bff"
-                    }
+                    "theme": { "color": "#007bff" }
                 };
-    
+        
+                // Open Razorpay checkout
                 const rzp = new Razorpay(options);
                 rzp.open();
-    
+        
             } catch (error) {
                 handleError('Error initiating payment. Please try again later.', error);
             }
         }
+        
+        // Error handler
+        function handleError(message, error = null) {
+            alert(message);
+            if (error) console.error(error);
+        }
+
     
         // Fetch Payment History
-        document.getElementById('fetchPaymentHistoryBtn').addEventListener('click', async () => {
+        document.getElementById('fetchPaymentHistoryBtn').addEventListener('click', () => {
             const patientId = document.getElementById('patient_id_history').value.trim();
-    
             if (!patientId) {
-                handleError('Please enter a valid Patient ID!');
+                alert('Patient ID is required to fetch payment history.');
                 return;
             }
-    
-            try {
-                const response = await fetch(`/payments/get_payment_history?patient_id=${patientId}`);
-                if (!response.ok) throw new Error('Error fetching payment history.');
-                const { payment_history } = await response.json();
-    
-                const historyTable = document.getElementById('paymentHistory');
-                historyTable.innerHTML = ''; // Clear existing rows
-    
-                if (payment_history.length > 0) {
-                    payment_history.forEach(payment => {
-                        const statusClass = payment.status.toLowerCase();
+
+            fetch(`/payments/patient_payments?patient_id=${encodeURIComponent(patientId)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+                    const tableBody = document.getElementById('paymentHistory');
+                    tableBody.innerHTML = '';
+                    if (data.length === 0) {
+                        const row = `<tr><td colspan="5">No payment history found.</td></tr>`;
+                        tableBody.innerHTML = row;
+                        return;
+                    }
+                    data.forEach(payment => {
                         const row = `
                             <tr>
                                 <td>${payment.payment_id}</td>
                                 <td>${payment.doctor_id}</td>
                                 <td>${payment.amount}</td>
-                                <td><span class="status ${statusClass}">${payment.status}</span></td>
-                                <td>${payment.date}</td>
-                            </tr>`;
-                        historyTable.insertAdjacentHTML('beforeend', row);
+                                <td><span class="status ${payment.status.toLowerCase()}">${payment.status}</span></td>
+                                <td>${new Date(payment.date).toLocaleDateString()}</td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
                     });
-                } else {
-                    historyTable.innerHTML = '<tr><td colspan="5">No payment history found.</td></tr>';
-                }
-    
-            } catch (error) {
-                handleError('Failed to fetch payment history. Please try again later.', error);
-            }
+                })
+                .catch(error => {
+                    console.error('Error fetching payment history:', error);
+                    alert('Failed to fetch payment history. Please try again later.');
+                });
         });
     </script>
 </body>
